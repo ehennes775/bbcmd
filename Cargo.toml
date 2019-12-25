@@ -1,5 +1,6 @@
 [package]
 name = "bbcmd"
+description = "Command line utility for Lepton-EDA"
 version = "0.1.0"
 authors = ["Edward Hennessy <ehennes@fastmail.com>"]
 edition = "2018"
@@ -7,3 +8,6 @@ edition = "2018"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+lazy_static = "1"
+regex = "1"
+structopt = "0.3.5"
