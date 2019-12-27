@@ -1,5 +1,6 @@
 use std::path::PathBuf;
 use structopt::StructOpt;
+use crate::schematic_set::SchematicSet;
 
 
 #[derive(Debug, StructOpt)]
@@ -25,6 +26,12 @@ impl RefdesSubcommand
 {
     pub fn execute(&self) -> Result<(),(&str)>
     {
+        let _schematics = match SchematicSet::create(&self.files)
+        {
+            Err(e) => return Err(e),
+            Ok(t) => t
+        };
+
         Ok(())
     }
 }
