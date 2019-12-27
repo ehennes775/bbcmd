@@ -11,17 +11,6 @@ pub struct ItemParams
 }
 
 
-impl ops::Index<usize> for ItemParams
-{
-    type Output = String;
-
-    fn index(&self, index: usize) -> &Self::Output
-    {
-        &self.params[index]
-    }
-}
-
-
 impl FromStr for ItemParams
 {
     type Err = ();
@@ -70,23 +59,41 @@ impl ItemParams
 }
 
 
+impl ops::Index<usize> for ItemParams
+{
+    type Output = String;
+
+    fn index(&self, index: usize) -> &Self::Output
+    {
+        &self.params[index]
+    }
+}
+
+
 #[cfg(test)]
 mod test
 {
     use crate::item_params::ItemParams;
+    use std::io::Write;
+
+
+    const LINES: &'static[&'static str] =
+    &[
+        "hello world",
+        "  hello world",
+        "hello world  ",
+        "  hello world  ",
+        "hello  world",
+        "  hello  world",
+        "hello  world  ",
+        "  hello  world  "
+    ];
 
 
     #[test]
     fn test_spacing()
     {
-        let lines = vec!(
-            "hello world",
-            "  hello world",
-            "hello world  ",
-            "  hello world  "
-            );
-
-        for line in lines
+        for line in LINES
         {
             let params = line.parse::<ItemParams>().unwrap();
 
@@ -95,6 +102,25 @@ mod test
 
             assert_eq!(params.code(), "hello");
             assert_eq!(params.len(), 2);
+        }
+    }
+
+
+    #[test]
+    fn test_write()
+    {
+        for line in LINES
+        {
+            let buffer: Vec<u8> = Vec::new();
+            let mut writer: Box<dyn Write> = Box::new(buffer);
+
+            let params = line.parse::<ItemParams>().unwrap();
+            params.write_to(&mut writer);
+
+            // TODO:figure out ownership here
+
+            //let output = String::from_utf8(buffer).unwrap();
+            //assert_eq!(output, *line);
         }
     }
 

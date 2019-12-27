@@ -3,16 +3,16 @@ use crate::schematic_item::SchematicItem;
 use std::io::Write;
 
 
-pub const CODE: &str = "V";
+pub const CODE: &str = "U";
 
 
-pub struct SchematicCircle
+pub struct SchematicBus
 {
     params : ItemParams
 }
 
 
-impl SchematicItem for SchematicCircle
+impl SchematicItem for SchematicBus
 {
     fn params(&self) -> &ItemParams { &self.params }
 
@@ -24,10 +24,10 @@ impl SchematicItem for SchematicCircle
 }
 
 
-impl SchematicCircle
+impl SchematicBus
 {
-    pub fn create(params: ItemParams) -> SchematicCircle
+    pub fn create(params: ItemParams) -> SchematicBus
     {
-        SchematicCircle { params }
+        SchematicBus { params }
     }
 }

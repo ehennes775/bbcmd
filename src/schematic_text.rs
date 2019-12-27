@@ -3,6 +3,9 @@ use crate::schematic_item::SchematicItem;
 use std::io::{Write, Read, BufRead, BufReader, Error};
 
 
+pub const CODE: &str = "T";
+
+
 pub struct SchematicText
 {
     lines : Vec<String>,
@@ -14,6 +17,9 @@ pub struct SchematicText
 
 impl SchematicItem for SchematicText
 {
+    fn params(&self) -> &ItemParams { &self.params }
+
+
     fn write_to(&self, writer: &mut Box<dyn Write>)
     {
         self.params.write_to(writer);

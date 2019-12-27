@@ -10,6 +10,11 @@ use crate::schematic_arc::SchematicArc;
 use crate::schematic_box::SchematicBox;
 use crate::schematic_complex::SchematicComplex;
 use crate::schematic_text::SchematicText;
+use crate::schematic_net::SchematicNet;
+use crate::schematic_bus::SchematicBus;
+use crate::schematic_path::SchematicPath;
+use crate::schematic_pin::SchematicPin;
+use crate::{schematic_arc, schematic_complex, schematic_box, schematic_line, schematic_net, schematic_bus, schematic_circle, schematic_text, schematic_path, schematic_pin};
 
 
 pub struct SchematicPage
@@ -54,12 +59,16 @@ impl SchematicPage
 
             let item:Result<Box<dyn SchematicItem>,&str> = match params.code()
             {
-                "A" => Ok(Box::new(SchematicArc::create(params))),
-                "C" => Ok(Box::new(SchematicComplex::create(params))),
-                "B" => Ok(Box::new(SchematicBox::create(params))),
-                "L" => Ok(Box::new(SchematicLine::create(params))),
-                "V" => Ok(Box::new(SchematicCircle::create(params))),
-                "T" => Ok(Box::new(SchematicText::create(params, &mut reader).unwrap())),
+                schematic_arc::CODE => Ok(Box::new(SchematicArc::create(params))),
+                schematic_complex::CODE => Ok(Box::new(SchematicComplex::create(params))),
+                schematic_box::CODE => Ok(Box::new(SchematicBox::create(params))),
+                schematic_path::CODE => Ok(Box::new(SchematicPath::create(params))),
+                schematic_line::CODE => Ok(Box::new(SchematicLine::create(params))),
+                schematic_net::CODE => Ok(Box::new(SchematicNet::create(params))),
+                schematic_pin::CODE => Ok(Box::new(SchematicPin::create(params))),
+                schematic_bus::CODE => Ok(Box::new(SchematicBus::create(params))),
+                schematic_circle::CODE => Ok(Box::new(SchematicCircle::create(params))),
+                schematic_text::CODE => Ok(Box::new(SchematicText::create(params, &mut reader).unwrap())),
                 _ => Err("")
             };
 
@@ -89,8 +98,6 @@ impl SchematicPage
 
     pub fn write_to(&self, writer: &mut Box<dyn Write>)
     {
-        //println!("path = {}", self.path.as_os_str());
-
         for item in &self.items
         {
             item.write_to(writer);
