@@ -1,3 +1,4 @@
+use crate::item_attributes::ItemAttributes;
 use crate::item_params::ItemParams;
 use crate::schematic_item::SchematicItem;
 use std::io::Write;
@@ -8,12 +9,18 @@ pub const CODE: &str = "C";
 
 pub struct SchematicComplex
 {
+    attributes : ItemAttributes,
+
     params : ItemParams
 }
 
 
 impl SchematicItem for SchematicComplex
 {
+    fn attributes(&self) -> Option<&ItemAttributes> { Some(&self.attributes) }
+    fn attributes_mut(&mut self) -> Option<&mut ItemAttributes> { Some(&mut self.attributes) }
+
+
     fn params(&self) -> &ItemParams { &self.params }
 
 
@@ -28,6 +35,6 @@ impl SchematicComplex
 {
     pub fn create(params: ItemParams) -> SchematicComplex
     {
-        SchematicComplex { params }
+        SchematicComplex { attributes: ItemAttributes::new(), params }
     }
 }

@@ -1,4 +1,4 @@
-use std::borrow::{Borrow};
+use std::borrow::{Borrow, BorrowMut};
 use std::fs::File;
 use std::io::{BufReader, BufRead, Write};
 use std::path::PathBuf;
@@ -15,14 +15,18 @@ use crate::schematic_bus::SchematicBus;
 use crate::schematic_path::SchematicPath;
 use crate::schematic_pin::SchematicPin;
 use crate::{schematic_arc, schematic_complex, schematic_box, schematic_line, schematic_net, schematic_bus, schematic_circle, schematic_text, schematic_path, schematic_pin};
-
+use std::str::FromStr;
+use crate::item_attributes::ItemAttributes;
 
 pub struct SchematicPage
 {
     items : Vec<Box<dyn SchematicItem>>,
 
 
-    path : PathBuf
+    path : PathBuf,
+
+
+    version : ItemParams
 }
 
 
@@ -40,7 +44,7 @@ impl SchematicPage
         let mut buffer = String::new();
         let mut count = reader.read_line(&mut buffer);
 
-        if count.borrow().as_ref().unwrap_or_else(|_e| &0) > &0
+        let version = if count.borrow().as_ref().unwrap_or_else(|_e| &0) > &0
         {
             let params = buffer.parse::<ItemParams>().unwrap();
 
@@ -48,8 +52,15 @@ impl SchematicPage
             {
                 buffer.clear();
                 count = reader.read_line(&mut buffer);
+
+                params;
+            }
+            else
+            {
+                ItemParams::from_str("v 19001000 2");
             }
         }
+        else { ItemParams::from_str("v 19001000 2"); };
 
         let mut items : Vec<Box<dyn SchematicItem>> = Vec::new();
 
@@ -57,7 +68,7 @@ impl SchematicPage
         {
             let params = buffer.parse::<ItemParams>().unwrap();
 
-            let item:Result<Box<dyn SchematicItem>,&str> = match params.code()
+            let mut item:Result<Box<dyn SchematicItem>,&str> = match params.code()
             {
                 schematic_arc::CODE => Ok(Box::new(SchematicArc::create(params))),
                 schematic_complex::CODE => Ok(Box::new(SchematicComplex::create(params))),
@@ -72,14 +83,23 @@ impl SchematicPage
                 _ => Err("")
             };
 
-            match item
-            {
-                Ok(i) => items.push(i),
-                Err(_e) => println!("ignore = {}", buffer)
-            }
-
             buffer.clear();
             count = reader.read_line(&mut buffer);
+
+            match item
+            {
+                Err(_e) => println!("ignore = {}", buffer),
+
+                Ok(mut i) =>
+                    {
+                        if let Some(attributes) = i.attributes_mut()
+                        {
+                            attributes.read_from(&mut buffer, &mut reader);
+                        }
+
+                        items.push(i)
+                    }
+            }
         }
 
         match count
@@ -91,7 +111,8 @@ impl SchematicPage
         Ok(SchematicPage
         {
             items,
-            path : path.clone()
+            path : path.clone(),
+            version : ItemParams::from_str("v 19001000 2").unwrap()
         })
     }
 
@@ -101,6 +122,10 @@ impl SchematicPage
         for item in &self.items
         {
             item.write_to(writer);
+
+            if let Some(attributes) = item.attributes()
+            {
+            }
         }
     }
 }

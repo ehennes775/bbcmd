@@ -16,6 +16,7 @@ mod schematic_pin;
 mod schematic_path;
 mod schematic_item;
 mod schematic_text;
+mod item_attributes;
 mod item_params;
 
 use std::process;
