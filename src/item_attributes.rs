@@ -43,11 +43,15 @@ impl ItemAttributes
     }
 
 
-    pub fn read_from<T: BufRead>(&mut self, buffer: &mut String, reader: &mut T)
+    pub fn read_from<T: BufRead>(buffer: &mut String, reader: &mut T) -> Result<ItemAttributes,i32>
     {
+        let mut ending_line = String::from("}");
+        let mut items= vec![];
+        let mut starting_line = String::from("{");
+
         if Self::is_starting_line(buffer)
         {
-            self.starting_line = buffer.to_string();
+            starting_line = buffer.to_string();
 
             buffer.clear();
             let mut count = reader.read_line(buffer);
@@ -58,9 +62,9 @@ impl ItemAttributes
 
                 if params.code() == schematic_text::CODE
                 {
-                    let attribute = SchematicText::create(params, reader).unwrap();
+                    let attribute = SchematicText::create(params, buffer, reader).unwrap();
 
-                    self.items.push(attribute);
+                    items.push(attribute);
                 }
                 else { /* todo: error */ }
 
@@ -68,11 +72,18 @@ impl ItemAttributes
                 count = reader.read_line(buffer);
             }
 
-            self.ending_line = buffer.to_string();
+            let ending_line = buffer.to_string();
 
             buffer.clear();
             count = reader.read_line(buffer);
         }
+
+        Ok(ItemAttributes
+        {
+            ending_line,
+            items,
+            starting_line
+        })
     }
 
 

@@ -34,26 +34,18 @@ impl SchematicItem for SchematicText
 
 impl SchematicText
 {
-    pub fn create<T: BufRead>(params: ItemParams, reader: &mut T) -> Result<SchematicText,&str>
+    pub fn create<T: BufRead>(params: ItemParams, buffer : &mut String, reader: &mut T) -> Result<SchematicText,i32>
     {
         let count_param = String::from(&params[9]);
-
         let line_count = count_param.parse::<usize>().unwrap();
-
-        let mut buffer = String::new();
-        let mut lines:Vec<String> = Vec::new();
+        let mut lines = vec![];
 
         for count in 0..line_count
         {
-            let mut line = reader.read_line(&mut buffer);
+            lines.push(buffer.to_string());
 
-            match line
-            {
-                Err(_r) => {},
-                Ok(_t) => lines.push(String::from(&buffer))
-            }
-
-            buffer.clear()
+            buffer.clear();
+            let count2 = reader.read_line(buffer).unwrap();
         }
 
         Ok(SchematicText { lines, params })

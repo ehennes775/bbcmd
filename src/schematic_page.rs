@@ -14,9 +14,11 @@ use crate::schematic_net::SchematicNet;
 use crate::schematic_bus::SchematicBus;
 use crate::schematic_path::SchematicPath;
 use crate::schematic_pin::SchematicPin;
-use crate::{schematic_arc, schematic_complex, schematic_box, schematic_line, schematic_net, schematic_bus, schematic_circle, schematic_text, schematic_path, schematic_pin};
+use crate::{schematic_arc, schematic_complex, schematic_box, schematic_line, schematic_net, schematic_bus, schematic_circle, schematic_text, schematic_path, schematic_pin, schematic_version};
 use std::str::FromStr;
 use crate::item_attributes::ItemAttributes;
+use crate::schematic_reader::SchematicReader;
+
 
 pub struct SchematicPage
 {
@@ -40,79 +42,43 @@ impl SchematicPage
             Ok(t) => t
         };
 
-        let mut reader = BufReader::new(file);
-        let mut buffer = String::new();
-        let mut count = reader.read_line(&mut buffer);
+        let mut reader = SchematicReader::new(file);
+        let mut params = reader.x2().unwrap();
 
-        let version = if count.borrow().as_ref().unwrap_or_else(|_e| &0) > &0
+        let version = if params.code() == schematic_version::CODE
         {
-            let params = buffer.parse::<ItemParams>().unwrap();
-
-            if params.code() == "v"
-            {
-                buffer.clear();
-                count = reader.read_line(&mut buffer);
-
-                params;
-            }
-            else
-            {
-                ItemParams::from_str("v 19001000 2");
-            }
+            let version = params;
+            params = reader.x2().unwrap();
+            version
         }
-        else { ItemParams::from_str("v 19001000 2"); };
-
-        let mut items : Vec<Box<dyn SchematicItem>> = Vec::new();
-
-        while count.borrow().as_ref().unwrap_or_else(|_e| &0) > &1
+        else
         {
-            let params = buffer.parse::<ItemParams>().unwrap();
+            ItemParams::from_str("hello").unwrap() // a default version
+        };
 
-            let mut item:Result<Box<dyn SchematicItem>,&str> = match params.code()
+        let mut items : Vec<Box<dyn SchematicItem>> = vec![];
+
+        while reader.count > 1
+        {
+            reader.x1();
+
+            if params.len() > 0
             {
-                schematic_arc::CODE => Ok(Box::new(SchematicArc::create(params))),
-                schematic_complex::CODE => Ok(Box::new(SchematicComplex::create(params))),
-                schematic_box::CODE => Ok(Box::new(SchematicBox::create(params))),
-                schematic_path::CODE => Ok(Box::new(SchematicPath::create(params))),
-                schematic_line::CODE => Ok(Box::new(SchematicLine::create(params))),
-                schematic_net::CODE => Ok(Box::new(SchematicNet::create(params))),
-                schematic_pin::CODE => Ok(Box::new(SchematicPin::create(params))),
-                schematic_bus::CODE => Ok(Box::new(SchematicBus::create(params))),
-                schematic_circle::CODE => Ok(Box::new(SchematicCircle::create(params))),
-                schematic_text::CODE => Ok(Box::new(SchematicText::create(params, &mut reader).unwrap())),
-                _ => Err("")
-            };
-
-            buffer.clear();
-            count = reader.read_line(&mut buffer);
-
-            match item
-            {
-                Err(_e) => println!("ignore = {}", buffer),
-
-                Ok(mut i) =>
-                    {
-                        if let Some(attributes) = i.attributes_mut()
-                        {
-                            attributes.read_from(&mut buffer, &mut reader);
-                        }
-
-                        items.push(i)
-                    }
+                match reader.x3(params)
+                {
+                    Err(_e) => println!("ignore = {}", reader.lookahead()),
+                    Ok(i) => items.push(i)
+                }
             }
-        }
 
-        match count
-        {
-            Err(_e) => println!("{}", "Failure"),
-            Ok(_t) => println!("{}", "Success")
+            params = reader.lookahead().parse::<ItemParams>().unwrap();
         }
 
         Ok(SchematicPage
         {
             items,
             path : path.clone(),
-            version : ItemParams::from_str("v 19001000 2").unwrap()
+            version
         })
     }
 

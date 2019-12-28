@@ -14,8 +14,10 @@ mod schematic_line;
 mod schematic_net;
 mod schematic_pin;
 mod schematic_path;
+mod schematic_reader;
 mod schematic_item;
 mod schematic_text;
+mod schematic_version;
 mod item_attributes;
 mod item_params;
 

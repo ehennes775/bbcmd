@@ -1,7 +1,7 @@
 use crate::item_attributes::ItemAttributes;
 use crate::item_params::ItemParams;
 use crate::schematic_item::SchematicItem;
-use std::io::Write;
+use std::io::{Write, BufRead};
 
 
 pub const CODE: &str = "C";
@@ -33,8 +33,12 @@ impl SchematicItem for SchematicComplex
 
 impl SchematicComplex
 {
-    pub fn create(params: ItemParams) -> SchematicComplex
+    pub fn create<T: BufRead>(params: ItemParams, buffer: &mut String, reader: &mut T) -> SchematicComplex
     {
-        SchematicComplex { attributes: ItemAttributes::new(), params }
+        SchematicComplex
+        {
+            attributes: ItemAttributes::read_from(buffer, reader).unwrap(),
+            params
+        }
     }
 }
