@@ -34,6 +34,7 @@ impl SchematicItem for SchematicBus
     fn write_to(&self, writer: &mut Box<dyn Write>)
     {
         self.params.write_to(writer);
+        self.attributes.write_to(writer);
     }
 }
 

@@ -31,7 +31,11 @@ impl SchematicItem for SchematicPin
     fn params(&self) -> &ItemParams { &self.params }
 
 
-    fn write_to(&self, writer: &mut Box<dyn Write>) { self.params.write_to(writer); }
+    fn write_to(&self, writer: &mut Box<dyn Write>)
+    {
+        self.params.write_to(writer);
+        self.attributes.write_to(writer);
+    }
 }
 
 
