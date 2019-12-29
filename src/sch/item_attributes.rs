@@ -1,19 +1,18 @@
 use regex::Regex;
-use std::io::{Write, BufRead};
+use std::io::{Write};
 use std::str::FromStr;
 use crate::sch::schematic_text::SchematicText;
 use crate::sch::item_params::ItemParams;
 use crate::sch::schematic_text;
 use crate::sch::schematic_item::SchematicItem;
+use crate::sch::schematic_reader::ItemReader;
 
 
 pub struct ItemAttributes
 {
     ending_line : String,
 
-
     items : Vec<SchematicText>,
-
 
     starting_line : String
 }
@@ -43,39 +42,38 @@ impl ItemAttributes
     }
 
 
-    pub fn read_from<T: BufRead>(buffer: &mut String, reader: &mut T) -> Result<ItemAttributes,i32>
+    pub fn read_from(reader: &mut impl ItemReader) -> Result<ItemAttributes,i32>
     {
         let mut ending_line = String::from("}");
         let mut items= vec![];
         let mut starting_line = String::from("{");
 
-        if Self::is_starting_line(buffer)
+        let mut lookahead = reader.lookahead();
+
+        if Self::is_starting_line(&lookahead)
         {
-            starting_line = buffer.to_string();
+            starting_line = lookahead;
 
-            buffer.clear();
-            let mut count = reader.read_line(buffer);
+            lookahead = reader.x9();
 
-            while !Self::is_ending_line(buffer)
+            while !Self::is_ending_line(&lookahead)
             {
-                let params = ItemParams::from_str(buffer).unwrap();
+                let params = ItemParams::from_str(&lookahead).unwrap();
 
                 if params.code() == schematic_text::CODE
                 {
-                    let attribute = SchematicText::create(params, buffer, reader).unwrap();
+                    let attribute = SchematicText::create(params, reader).unwrap();
 
                     items.push(attribute);
                 }
                 else { /* todo: error */ }
 
-                buffer.clear();
-                count = reader.read_line(buffer);
+                lookahead = reader.x9();
             }
 
-            let ending_line = buffer.to_string();
+            ending_line = lookahead;
 
-            buffer.clear();
-            count = reader.read_line(buffer);
+            reader.x9();
         }
 
         Ok(ItemAttributes

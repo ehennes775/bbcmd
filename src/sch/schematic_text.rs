@@ -1,6 +1,7 @@
 use crate::sch::item_params::ItemParams;
 use crate::sch::schematic_item::SchematicItem;
-use std::io::{Write, Read, BufRead, BufReader, Error};
+use crate::sch::schematic_reader::ItemReader;
+use std::io::Write;
 
 
 pub const CODE: &str = "T";
@@ -10,8 +11,14 @@ pub struct SchematicText
 {
     lines : Vec<String>,
 
-
     params : ItemParams
+}
+
+
+enum ParamIndex
+{
+    CODE = 0,
+    LINES = 9
 }
 
 
@@ -34,19 +41,23 @@ impl SchematicItem for SchematicText
 
 impl SchematicText
 {
-    pub fn create<T: BufRead>(params: ItemParams, buffer : &mut String, reader: &mut T) -> Result<SchematicText,i32>
+    pub fn create(params: ItemParams, reader: &mut impl ItemReader) -> Result<SchematicText,i32>
     {
-        let count_param = String::from(&params[9]);
-        let line_count = count_param.parse::<usize>().unwrap();
-        let mut lines = vec![];
+        assert_eq!(&params[ParamIndex::CODE as usize], CODE);
 
-        for count in 0..line_count
+        let param = String::from(&params[ParamIndex::LINES as usize]);
+
+        let count = match param.parse::<usize>()
         {
-            lines.push(buffer.to_string());
+            Err(_e) => return Err(42),
+            Ok(t) => t
+        };
 
-            buffer.clear();
-            let count2 = reader.read_line(buffer).unwrap();
-        }
+        let lines = match reader.read_lines(count)
+        {
+            Err(_e) => return Err(42),
+            Ok(t) => t
+        };
 
         Ok(SchematicText { lines, params })
     }

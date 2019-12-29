@@ -12,6 +12,12 @@ pub struct SchematicCircle
 }
 
 
+enum ParamIndex
+{
+    CODE = 0
+}
+
+
 impl SchematicItem for SchematicCircle
 {
     fn params(&self) -> &ItemParams { &self.params }
@@ -28,6 +34,8 @@ impl SchematicCircle
 {
     pub fn create(params: ItemParams) -> SchematicCircle
     {
+        assert_eq!(&params[ParamIndex::CODE as usize], CODE);
+
         SchematicCircle { params }
     }
 }

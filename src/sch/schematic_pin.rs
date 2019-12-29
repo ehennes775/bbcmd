@@ -1,7 +1,8 @@
 use crate::sch::item_attributes::ItemAttributes;
 use crate::sch::item_params::ItemParams;
 use crate::sch::schematic_item::SchematicItem;
-use std::io::{Write, BufRead};
+use std::io::{Write};
+use crate::sch::schematic_reader::ItemReader;
 
 
 pub const CODE: &str = "P";
@@ -11,8 +12,13 @@ pub struct SchematicPin
 {
     attributes : ItemAttributes,
 
-
     params : ItemParams
+}
+
+
+enum ParamIndex
+{
+    CODE = 0
 }
 
 
@@ -31,11 +37,13 @@ impl SchematicItem for SchematicPin
 
 impl SchematicPin
 {
-    pub fn create<T: BufRead>(params: ItemParams, buffer: &mut String, reader: &mut T) -> SchematicPin
+    pub fn create(params: ItemParams, reader : &mut impl ItemReader) -> SchematicPin
     {
+        assert_eq!(&params[ParamIndex::CODE as usize], CODE);
+
         SchematicPin
         {
-            attributes: ItemAttributes::read_from(buffer, reader).unwrap(),
+            attributes: ItemAttributes::read_from(reader).unwrap(),
             params
         }
     }

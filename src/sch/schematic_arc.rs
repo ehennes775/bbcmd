@@ -12,6 +12,12 @@ pub struct SchematicArc
 }
 
 
+enum ParamIndex
+{
+    CODE = 0
+}
+
+
 impl SchematicItem for SchematicArc
 {
     fn params(&self) -> &ItemParams { &self.params }
@@ -26,5 +32,10 @@ impl SchematicItem for SchematicArc
 
 impl SchematicArc
 {
-    pub fn create(params: ItemParams) -> SchematicArc { SchematicArc { params } }
+    pub fn create(params: ItemParams) -> SchematicArc
+    {
+        assert_eq!(&params[ParamIndex::CODE as usize], CODE);
+
+        SchematicArc { params }
+    }
 }

@@ -1,7 +1,6 @@
 use regex::Regex;
 use std::io::Write;
 use std::ops;
-use std::ops::Index;
 use std::str::FromStr;
 
 

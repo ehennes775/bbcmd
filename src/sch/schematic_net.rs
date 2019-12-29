@@ -1,7 +1,8 @@
 use crate::sch::item_attributes::ItemAttributes;
 use crate::sch::item_params::ItemParams;
 use crate::sch::schematic_item::SchematicItem;
-use std::io::{Write, BufRead};
+use crate::sch::schematic_reader::ItemReader;
+use std::io::Write;
 
 
 pub const CODE: &str = "N";
@@ -13,6 +14,12 @@ pub struct SchematicNet
 
 
     params : ItemParams
+}
+
+
+enum ParamIndex
+{
+    CODE = 0
 }
 
 
@@ -31,11 +38,11 @@ impl SchematicItem for SchematicNet
 
 impl SchematicNet
 {
-    pub fn create<T: BufRead>(params: ItemParams, buffer: &mut String, reader: &mut T) -> SchematicNet
+    pub fn create(params: ItemParams, reader : &mut impl ItemReader) -> SchematicNet
     {
         SchematicNet
         {
-            attributes: ItemAttributes::read_from(buffer, reader).unwrap(),
+            attributes: ItemAttributes::read_from(reader).unwrap(),
             params
         }
     }

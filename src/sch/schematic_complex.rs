@@ -1,7 +1,8 @@
 use crate::sch::item_attributes::ItemAttributes;
 use crate::sch::item_params::ItemParams;
 use crate::sch::schematic_item::SchematicItem;
-use std::io::{Write, BufRead};
+use crate::sch::schematic_reader::ItemReader;
+use std::io::Write;
 
 
 pub const CODE: &str = "C";
@@ -12,6 +13,12 @@ pub struct SchematicComplex
     attributes : ItemAttributes,
 
     params : ItemParams
+}
+
+
+enum ParamIndex
+{
+    CODE = 0
 }
 
 
@@ -33,11 +40,11 @@ impl SchematicItem for SchematicComplex
 
 impl SchematicComplex
 {
-    pub fn create<T: BufRead>(params: ItemParams, buffer: &mut String, reader: &mut T) -> SchematicComplex
+    pub fn create<T: ItemReader>(params: ItemParams, reader : &mut T) -> SchematicComplex
     {
         SchematicComplex
         {
-            attributes: ItemAttributes::read_from(buffer, reader).unwrap(),
+            attributes: ItemAttributes::read_from(reader).unwrap(),
             params
         }
     }

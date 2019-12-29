@@ -12,6 +12,12 @@ pub struct SchematicLine
 }
 
 
+enum ParamIndex
+{
+    CODE = 0
+}
+
+
 impl SchematicItem for SchematicLine
 {
     fn params(&self) -> &ItemParams { &self.params }
@@ -28,6 +34,8 @@ impl SchematicLine
 {
     pub fn create(params: ItemParams) -> SchematicLine
     {
+        assert_eq!(&params[ParamIndex::CODE as usize], CODE);
+
         SchematicLine { params }
     }
 }
