@@ -2,15 +2,15 @@ use std::fs::File;
 use std::io::{Write};
 use std::path::PathBuf;
 use crate::sch::item_params::ItemParams;
-use crate::sch::schematic_item::SchematicItem;
+use crate::sch::item::Item;
 use std::str::FromStr;
-use crate::sch::schematic_reader::SchematicReader;
-use crate::sch::schematic_version;
+use crate::sch::reader::Reader;
+use crate::sch::version;
 
 
-pub struct SchematicPage
+pub struct Page
 {
-    items : Vec<Box<dyn SchematicItem>>,
+    items : Vec<Box<dyn Item>>,
 
 
     path : PathBuf,
@@ -20,9 +20,9 @@ pub struct SchematicPage
 }
 
 
-impl SchematicPage
+impl Page
 {
-    pub fn create(path : &PathBuf) -> Result<SchematicPage,&str>
+    pub fn create(path : &PathBuf) -> Result<Page,&str>
     {
         let file = match File::open(path)
         {
@@ -30,10 +30,10 @@ impl SchematicPage
             Ok(t) => t
         };
 
-        let mut reader = SchematicReader::new(file);
+        let mut reader = Reader::new(file);
         let mut params = reader.x2().unwrap();
 
-        let version = if params.code() == schematic_version::CODE
+        let version = if params.code() == version::CODE
         {
             let version = params;
             params = reader.x2().unwrap();
@@ -44,7 +44,7 @@ impl SchematicPage
             ItemParams::from_str("hello").unwrap() // a default version
         };
 
-        let mut items : Vec<Box<dyn SchematicItem>> = vec![];
+        let mut items : Vec<Box<dyn Item>> = vec![];
 
         while reader.count > 1
         {
@@ -62,7 +62,7 @@ impl SchematicPage
             params = reader.lookahead().parse::<ItemParams>().unwrap();
         }
 
-        Ok(SchematicPage
+        Ok(Page
         {
             items,
             path : path.clone(),

@@ -1,16 +1,14 @@
 use crate::sch::item_params::ItemParams;
-use crate::sch::schematic_item::SchematicItem;
-use crate::sch::schematic_reader::ItemReader;
+use crate::sch::item::Item;
 use std::io::Write;
+use crate::sch::reader::ItemReader;
 
 
-pub const CODE: &str = "T";
+pub const CODE: &str = "H";
 
 
-pub struct SchematicText
+pub struct Path
 {
-    lines : Vec<String>,
-
     params : ItemParams
 }
 
@@ -18,11 +16,11 @@ pub struct SchematicText
 enum ParamIndex
 {
     CODE = 0,
-    LINES = 9
+    LINES = 13
 }
 
 
-impl SchematicItem for SchematicText
+impl Item for Path
 {
     fn params(&self) -> &ItemParams { &self.params }
 
@@ -30,18 +28,13 @@ impl SchematicItem for SchematicText
     fn write_to(&self, writer: &mut Box<dyn Write>)
     {
         self.params.write_to(writer);
-
-        for line in &self.lines
-        {
-            writer.write(line.as_bytes());
-        }
     }
 }
 
 
-impl SchematicText
+impl Path
 {
-    pub fn create(params: ItemParams, reader: &mut impl ItemReader) -> Result<SchematicText,i32>
+    pub fn create(params: ItemParams, reader: &mut impl ItemReader) -> Result<Path,i32>
     {
         assert_eq!(&params[ParamIndex::CODE as usize], CODE);
 
@@ -59,6 +52,6 @@ impl SchematicText
             Ok(t) => t
         };
 
-        Ok(SchematicText { lines, params })
+        Ok(Path { params })
     }
 }

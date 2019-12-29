@@ -1,14 +1,14 @@
 use crate::sch::item_params::ItemParams;
-use crate::sch::schematic_item::SchematicItem;
+use crate::sch::item::Item;
 use std::io::Write;
 
 
 pub const CODE: &str = "B";
 
 
-pub struct SchematicBox
+pub struct Box
 {
-    params : ItemParams
+    params: ItemParams
 }
 
 
@@ -18,24 +18,25 @@ enum ParamIndex
 }
 
 
-impl SchematicItem for SchematicBox
+impl Item for Box
 {
     fn params(&self) -> &ItemParams { &self.params }
 
 
-    fn write_to(&self, writer: &mut Box<dyn Write>)
+    fn write_to(&self, writer: &mut std::boxed::Box<dyn Write>)
     {
         self.params.write_to(writer);
     }
 }
 
 
-impl SchematicBox
+impl Box
 {
-    pub fn create(params: ItemParams) -> SchematicBox
+    pub fn create(params: ItemParams) -> Box
     {
         assert_eq!(&params[ParamIndex::CODE as usize], CODE);
 
-        SchematicBox { params }
+        Box { params }
     }
 }
+

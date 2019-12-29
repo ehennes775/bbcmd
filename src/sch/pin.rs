@@ -1,14 +1,14 @@
 use crate::sch::item_attributes::ItemAttributes;
 use crate::sch::item_params::ItemParams;
-use crate::sch::schematic_item::SchematicItem;
-use crate::sch::schematic_reader::ItemReader;
-use std::io::Write;
+use crate::sch::item::Item;
+use std::io::{Write};
+use crate::sch::reader::ItemReader;
 
 
-pub const CODE: &str = "U";
+pub const CODE: &str = "P";
 
 
-pub struct SchematicBus
+pub struct Pin
 {
     attributes : ItemAttributes,
 
@@ -22,7 +22,7 @@ enum ParamIndex
 }
 
 
-impl SchematicItem for SchematicBus
+impl Item for Pin
 {
     fn attributes(&self) -> Option<&ItemAttributes> { Some(&self.attributes) }
     fn attributes_mut(&mut self) -> Option<&mut ItemAttributes> { Some(&mut self.attributes) }
@@ -39,13 +39,13 @@ impl SchematicItem for SchematicBus
 }
 
 
-impl SchematicBus
+impl Pin
 {
-    pub fn create(params: ItemParams, reader : &mut impl ItemReader) -> SchematicBus
+    pub fn create(params: ItemParams, reader : &mut impl ItemReader) -> Pin
     {
         assert_eq!(&params[ParamIndex::CODE as usize], CODE);
 
-        SchematicBus
+        Pin
         {
             attributes: ItemAttributes::read_from(reader).unwrap(),
             params

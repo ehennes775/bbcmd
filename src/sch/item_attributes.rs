@@ -1,18 +1,18 @@
 use regex::Regex;
 use std::io::{Write};
 use std::str::FromStr;
-use crate::sch::schematic_text::SchematicText;
+use crate::sch::text::Text;
 use crate::sch::item_params::ItemParams;
-use crate::sch::schematic_text;
-use crate::sch::schematic_item::SchematicItem;
-use crate::sch::schematic_reader::ItemReader;
+use crate::sch::text;
+use crate::sch::item::Item;
+use crate::sch::reader::ItemReader;
 
 
 pub struct ItemAttributes
 {
     ending_line : String,
 
-    items : Vec<SchematicText>,
+    items : Vec<Text>,
 
     starting_line : String
 }
@@ -60,9 +60,9 @@ impl ItemAttributes
             {
                 let params = ItemParams::from_str(&lookahead).unwrap();
 
-                if params.code() == schematic_text::CODE
+                if params.code() == text::CODE
                 {
-                    let attribute = SchematicText::create(params, reader).unwrap();
+                    let attribute = Text::create(params, reader).unwrap();
 
                     items.push(attribute);
                 }

@@ -3,7 +3,7 @@ use crate::sch::item_params::ItemParams;
 use std::io::Write;
 
 
-pub trait SchematicItem
+pub trait Item
 {
     fn attributes(&self) -> Option<&ItemAttributes> { None }
     fn attributes_mut(&mut self) -> Option<&mut ItemAttributes> { None }

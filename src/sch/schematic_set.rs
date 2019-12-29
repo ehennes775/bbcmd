@@ -1,10 +1,10 @@
 use std::path::PathBuf;
-use crate::sch::schematic_page::SchematicPage;
+use crate::sch::page::Page;
 
 
 pub struct SchematicSet
 {
-    pages : Vec<SchematicPage>
+    pages : Vec<Page>
 }
 
 
@@ -12,9 +12,9 @@ impl SchematicSet
 {
     pub fn create(files : &[PathBuf]) -> Result<SchematicSet,&str>
     {
-        let result : Result<Vec<SchematicPage>,_> = files
+        let result : Result<Vec<Page>,_> = files
             .iter()
-            .map(|f| SchematicPage::create(f))
+            .map(|f| Page::create(f))
             .collect();
 
         match result

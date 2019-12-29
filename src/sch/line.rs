@@ -1,12 +1,12 @@
 use crate::sch::item_params::ItemParams;
-use crate::sch::schematic_item::SchematicItem;
+use crate::sch::item::Item;
 use std::io::Write;
 
 
-pub const CODE: &str = "A";
+pub const CODE: &str = "L";
 
 
-pub struct SchematicArc
+pub struct Line
 {
     params : ItemParams
 }
@@ -18,7 +18,7 @@ enum ParamIndex
 }
 
 
-impl SchematicItem for SchematicArc
+impl Item for Line
 {
     fn params(&self) -> &ItemParams { &self.params }
 
@@ -30,12 +30,12 @@ impl SchematicItem for SchematicArc
 }
 
 
-impl SchematicArc
+impl Line
 {
-    pub fn create(params: ItemParams) -> SchematicArc
+    pub fn create(params: ItemParams) -> Line
     {
         assert_eq!(&params[ParamIndex::CODE as usize], CODE);
 
-        SchematicArc { params }
+        Line { params }
     }
 }

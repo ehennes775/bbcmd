@@ -1,19 +1,19 @@
 mod item_attributes;
 mod item_params;
 
-mod schematic_arc;
-mod schematic_box;
-mod schematic_bus;
-mod schematic_circle;
-mod schematic_complex;
-mod schematic_item;
-mod schematic_line;
-mod schematic_net;
-mod schematic_pin;
-mod schematic_path;
-mod schematic_text;
+mod arc;
+mod r#box;
+mod bus;
+mod circle;
+mod complex;
+mod item;
+mod line;
+mod net;
+mod pin;
+mod path;
+mod text;
 
-mod schematic_page;
-mod schematic_reader;
+mod page;
+mod reader;
 pub(crate) mod schematic_set;
-mod schematic_version;
+mod version;
