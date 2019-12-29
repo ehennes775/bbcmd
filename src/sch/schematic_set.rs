@@ -1,5 +1,5 @@
 use std::path::PathBuf;
-use crate::schematic_page::SchematicPage;
+use crate::sch::schematic_page::SchematicPage;
 
 
 pub struct SchematicSet

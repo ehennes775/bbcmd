@@ -1,7 +1,7 @@
 use std::io::Write;
-use crate::item_params::ItemParams;
-use crate::schematic_text::SchematicText;
-use crate::item_attributes::ItemAttributes;
+use crate::sch::item_params::ItemParams;
+use crate::sch::schematic_text::SchematicText;
+use crate::sch::item_attributes::ItemAttributes;
 
 
 pub trait SchematicItem

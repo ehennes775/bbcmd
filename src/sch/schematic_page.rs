@@ -2,22 +2,22 @@ use std::borrow::{Borrow, BorrowMut};
 use std::fs::File;
 use std::io::{BufReader, BufRead, Write};
 use std::path::PathBuf;
-use crate::item_params::ItemParams;
-use crate::schematic_line::SchematicLine;
-use crate::schematic_item::SchematicItem;
-use crate::schematic_circle::SchematicCircle;
-use crate::schematic_arc::SchematicArc;
-use crate::schematic_box::SchematicBox;
-use crate::schematic_complex::SchematicComplex;
-use crate::schematic_text::SchematicText;
-use crate::schematic_net::SchematicNet;
-use crate::schematic_bus::SchematicBus;
-use crate::schematic_path::SchematicPath;
-use crate::schematic_pin::SchematicPin;
-use crate::{schematic_arc, schematic_complex, schematic_box, schematic_line, schematic_net, schematic_bus, schematic_circle, schematic_text, schematic_path, schematic_pin, schematic_version};
+use crate::sch::item_params::ItemParams;
+use crate::sch::schematic_line::SchematicLine;
+use crate::sch::schematic_item::SchematicItem;
+use crate::sch::schematic_circle::SchematicCircle;
+use crate::sch::schematic_arc::SchematicArc;
+use crate::sch::schematic_box::SchematicBox;
+use crate::sch::schematic_complex::SchematicComplex;
+use crate::sch::schematic_text::SchematicText;
+use crate::sch::schematic_net::SchematicNet;
+use crate::sch::schematic_bus::SchematicBus;
+use crate::sch::schematic_path::SchematicPath;
+use crate::sch::schematic_pin::SchematicPin;
+use crate::sch::{schematic_arc, schematic_complex, schematic_box, schematic_line, schematic_net, schematic_bus, schematic_circle, schematic_text, schematic_path, schematic_pin, schematic_version};
 use std::str::FromStr;
-use crate::item_attributes::ItemAttributes;
-use crate::schematic_reader::SchematicReader;
+use crate::sch::item_attributes::ItemAttributes;
+use crate::sch::schematic_reader::SchematicReader;
 
 
 pub struct SchematicPage

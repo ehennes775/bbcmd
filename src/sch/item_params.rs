@@ -73,7 +73,7 @@ impl ops::Index<usize> for ItemParams
 #[cfg(test)]
 mod test
 {
-    use crate::item_params::ItemParams;
+    use crate::sch::item_params::ItemParams;
     use std::io::Write;
 
 

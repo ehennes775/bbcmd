@@ -1,5 +1,5 @@
-use crate::item_params::ItemParams;
-use crate::schematic_item::SchematicItem;
+use crate::sch::item_params::ItemParams;
+use crate::sch::schematic_item::SchematicItem;
 use std::io::{Write, Read, BufRead, BufReader, Error};
 
 

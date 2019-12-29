@@ -1,10 +1,10 @@
 use regex::Regex;
 use std::io::{Write, BufRead};
-use crate::schematic_text::SchematicText;
-use crate::schematic_item::SchematicItem;
-use crate::item_params::ItemParams;
 use std::str::FromStr;
-use crate::schematic_text;
+use crate::sch::schematic_text::SchematicText;
+use crate::sch::item_params::ItemParams;
+use crate::sch::schematic_text;
+use crate::sch::schematic_item::SchematicItem;
 
 
 pub struct ItemAttributes
@@ -120,7 +120,7 @@ impl ItemAttributes
 #[cfg(test)]
 mod test
 {
-    use crate::item_attributes::ItemAttributes;
+    use crate::sch::item_attributes::ItemAttributes;
 
 
     #[test]

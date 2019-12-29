@@ -1,6 +1,6 @@
 use std::path::PathBuf;
 use structopt::StructOpt;
-use crate::schematic_set::SchematicSet;
+use crate::sch::schematic_set::SchematicSet;
 
 
 #[derive(Debug, StructOpt)]
