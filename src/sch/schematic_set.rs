@@ -4,7 +4,7 @@ use crate::sch::page::Page;
 
 pub struct SchematicSet
 {
-    pages : Vec<Page>
+    pub pages : Vec<Page>
 }
 
 

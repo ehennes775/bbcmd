@@ -3,9 +3,11 @@ use crate::sch::item_params::ItemParams;
 use crate::sch::item::Item;
 use crate::sch::reader::ItemReader;
 use std::io::Write;
+use std::fmt::{Formatter, Debug, Error};
 
 
 pub const CODE: &str = "N";
+pub const NAME: &str = "Net";
 
 
 pub struct Net
@@ -20,6 +22,19 @@ pub struct Net
 enum ParamIndex
 {
     CODE = 0
+}
+
+
+impl Debug for Net
+{
+    fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error>
+    {
+        match self.attributes.items.len()
+        {
+            1usize => write!(f, "{} {{ {:?} }}", NAME, self.attributes.items[0]),
+            c => write!(f, "{} {{ attributes={} }}", NAME, c)
+        }
+    }
 }
 
 

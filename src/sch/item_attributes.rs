@@ -12,7 +12,7 @@ pub struct ItemAttributes
 {
     ending_line : String,
 
-    items : Vec<Text>,
+    pub items : Vec<Text>,
 
     starting_line : String
 }

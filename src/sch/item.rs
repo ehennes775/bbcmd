@@ -1,9 +1,10 @@
 use crate::sch::item_attributes::ItemAttributes;
 use crate::sch::item_params::ItemParams;
 use std::io::Write;
+use std::fmt::Debug;
 
 
-pub trait Item
+pub trait Item : Debug
 {
     fn attributes(&self) -> Option<&ItemAttributes> { None }
     fn attributes_mut(&mut self) -> Option<&mut ItemAttributes> { None }

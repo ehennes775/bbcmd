@@ -26,11 +26,21 @@ impl RefdesSubcommand
 {
     pub fn execute(&self) -> Result<(),(&str)>
     {
-        let _schematics = match SchematicSet::create(&self.files)
+        let schematics = match SchematicSet::create(&self.files)
         {
             Err(e) => return Err(e),
             Ok(t) => t
         };
+
+        for schematic in schematics.pages
+        {
+            println!("{}", "Schematic");
+
+            for item in schematic.items
+            {
+                println!("    {:?}", item);
+            }
+        }
 
         Ok(())
     }

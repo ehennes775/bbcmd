@@ -1,14 +1,18 @@
-use crate::sch::item_params::ItemParams;
 use crate::sch::item::Item;
-use std::io::Write;
+use crate::sch::item_params::ItemParams;
 use crate::sch::reader::ItemReader;
+use std::io::Write;
+use std::fmt::{Formatter, Debug, Error};
 
 
 pub const CODE: &str = "H";
+pub const NAME: &str = "Path";
 
 
 pub struct Path
 {
+    lines : Vec<String>,
+
     params : ItemParams
 }
 
@@ -20,6 +24,15 @@ enum ParamIndex
 }
 
 
+impl Debug for Path
+{
+    fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error>
+    {
+        write!(f, "{} {{ lines={} }}", NAME, &self.lines.len())
+    }
+}
+
+
 impl Item for Path
 {
     fn params(&self) -> &ItemParams { &self.params }
@@ -28,6 +41,11 @@ impl Item for Path
     fn write_to(&self, writer: &mut Box<dyn Write>)
     {
         self.params.write_to(writer);
+
+        for line in &self.lines
+        {
+            writer.write(line.as_bytes());
+        }
     }
 }
 
@@ -52,6 +70,6 @@ impl Path
             Ok(t) => t
         };
 
-        Ok(Path { params })
+        Ok(Path { lines, params })
     }
 }

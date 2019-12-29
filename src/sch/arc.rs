@@ -1,9 +1,11 @@
 use crate::sch::item_params::ItemParams;
 use crate::sch::item::Item;
 use std::io::Write;
+use std::fmt::{Debug, Formatter, Error};
 
 
 pub const CODE: &str = "A";
+pub const NAME: &str = "Arc";
 
 
 pub struct Arc
@@ -15,6 +17,12 @@ pub struct Arc
 enum ParamIndex
 {
     CODE = 0
+}
+
+
+impl Debug for Arc
+{
+    fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> { write!(f, "{}", NAME) }
 }
 
 

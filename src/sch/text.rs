@@ -2,9 +2,11 @@ use crate::sch::item_params::ItemParams;
 use crate::sch::item::Item;
 use crate::sch::reader::ItemReader;
 use std::io::Write;
+use std::fmt::{Debug, Formatter, Error};
 
 
 pub const CODE: &str = "T";
+pub const NAME: &str = "Text";
 
 
 pub struct Text
@@ -19,6 +21,19 @@ enum ParamIndex
 {
     CODE = 0,
     LINES = 9
+}
+
+
+impl Debug for Text
+{
+    fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error>
+    {
+        match self.lines.len()
+        {
+            1usize => write!(f, "{} {{ \"{}\" }}", NAME, &self.lines[0].trim_end()),
+            l => write!(f, "{} {{ lines={} }}", NAME, l)
+        }
+    }
 }
 
 

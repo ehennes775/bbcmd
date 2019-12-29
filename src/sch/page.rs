@@ -10,7 +10,7 @@ use crate::sch::version;
 
 pub struct Page
 {
-    items : Vec<Box<dyn Item>>,
+    pub items : Vec<Box<dyn Item>>,
 
 
     path : PathBuf,

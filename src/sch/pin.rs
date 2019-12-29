@@ -3,9 +3,11 @@ use crate::sch::item_params::ItemParams;
 use crate::sch::item::Item;
 use std::io::{Write};
 use crate::sch::reader::ItemReader;
+use std::fmt::{Formatter, Debug, Error};
 
 
 pub const CODE: &str = "P";
+pub const NAME: &str = "Pin";
 
 
 pub struct Pin
@@ -19,6 +21,19 @@ pub struct Pin
 enum ParamIndex
 {
     CODE = 0
+}
+
+
+impl Debug for Pin
+{
+    fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error>
+    {
+        match self.attributes.items.len()
+        {
+            1usize => write!(f, "{} {{ {:?} }}", NAME, self.attributes.items[0]),
+            c => write!(f, "{} {{ attributes={} }}", NAME, c)
+        }
+    }
 }
 
 
