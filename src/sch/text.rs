@@ -52,7 +52,8 @@ impl Item for Text
 
         for line in &self.lines
         {
-            writer.write(line.as_bytes());
+            writer.write(line.trim_end().as_bytes());
+            writer.write("\n".as_bytes());
         }
     }
 }
@@ -71,6 +72,12 @@ impl Text
         let input = &self.lines.join("\n");
 
         parse(input).1.and_then(|v| Some(String::from(v.trim_end())))
+    }
+
+
+    pub fn set_attribute_value<T: ToString>(&mut self, value: T)
+    {
+        self.lines = build(self.attribute_name().unwrap(), value);
     }
 
 
@@ -94,6 +101,14 @@ impl Text
 
         Ok(Text { lines, params })
     }
+}
+
+
+fn build<T: ToString,  U: ToString>(name: T, value: U) -> Vec<String>
+{
+    let a = format!("{}={}", name.to_string(), value.to_string());
+
+    a.lines().map(|s| s.to_string()).collect()
 }
 
 

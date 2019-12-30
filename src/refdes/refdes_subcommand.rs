@@ -4,6 +4,9 @@ use crate::sch::design::Design;
 use crate::sch::complex::Complex;
 use crate::sch::text::Text;
 use regex::Regex;
+use std::io::{stdout, Write};
+use std::ffi::OsString;
+use std::fs::File;
 
 
 #[derive(Debug, StructOpt)]
@@ -29,11 +32,58 @@ impl RefdesSubcommand
 {
     pub fn execute(&self) -> Result<(),(&str)>
     {
-        let schematics = match Design::create(&self.files)
+        let mut schematics = match Design::create(&self.files)
         {
             Err(e) => return Err(e),
             Ok(t) => t
         };
+
+        println!();
+        println!("{}", "Components");
+
+        {
+            let mut components: Vec<&mut Complex> = schematics.pages
+            .iter_mut()
+            .map(|p| p.items.iter_mut())
+            .flatten()
+            .map(|i| i.into_complex_mut())
+            .flat_map(|i| i)
+            .collect();
+
+            for component in components
+            {
+                //println!("{:?}", component);
+
+                let mut attributes: Vec<&mut Text> = component.attributes.items
+                .iter_mut()
+                .filter(|t| t.attribute_name().is_some())
+                .filter(|t| t.attribute_name().unwrap().eq(&String::from(r"refdes")))
+                //.flat_map(|i| i)
+                .collect()
+                ;
+
+                for attribute in attributes
+                {
+                    let input = attribute.attribute_value().unwrap();
+
+                    match reset_refdes(input.as_str())
+                    {
+                        None =>
+                            {
+                                println!("invalid REFDES {}", input);
+                            }
+                        Some(t) =>
+                            {
+                                println!("valid before={:?} after={:?}", input, t);
+
+                                attribute.set_attribute_value(t);
+                            }
+                    }
+                }
+            }
+        }
+
+        // TODO: move into a debug/dump function
 
         println!("{:?}", schematics);
 
@@ -44,33 +94,32 @@ impl RefdesSubcommand
             for item in &schematic.items
             {
                 println!("        {:?}", item);
+
+                if let Some(c) = item.into_complex()
+                {
+                    for attribute in &c.attributes.items
+                    {
+                        println!("            {:?}", attribute);
+                    }
+                }
             }
         }
 
-        println!();
-        println!("{}", "Components");
 
-        let components: Vec<&Complex> = schematics.pages
-            .iter()
-            .map(|p| p.items.iter())
-            .flatten()
-            .map(|i| i.into_complex())
-            .flat_map(|i| i)
-            .collect();
-
-        for component in components
         {
-            println!("{:?}", component);
-
-            let attributes = component.attributes.items
-                .iter()
-                .filter(|t| t.attribute_name().is_some())
-                .filter(|t| t.attribute_name().unwrap().eq(&String::from(r"refdes")))
-                .map(|t| t.attribute_value().unwrap());
-
-            for attribute in attributes
+            for page in schematics.pages
             {
-                println!("    {:?}", attribute);
+                let output_filename = format!("out_{}", page.path.file_name().unwrap().to_str().unwrap());
+
+                let x2 = OsString::from(&output_filename);
+
+                let file = File::create(&output_filename).unwrap();
+
+                println!("Writing {:?}", output_filename);
+
+                let mut output: Box<dyn Write> = Box::new(file);
+
+                page.write_to(&mut output);
             }
         }
 

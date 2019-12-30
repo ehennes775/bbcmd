@@ -16,6 +16,7 @@ pub trait Item : Debug
 
 
     fn into_complex(&self) -> Option<&Complex> { None }
+    fn into_complex_mut(&mut self) -> Option<&mut Complex> { None }
 
     fn into_text(&self) -> Option<&Text> { None }
 

@@ -54,6 +54,7 @@ impl ItemParams
         let output = &self.params.join(" ");
 
         writer.write(output.as_bytes());
+        writer.write("\n".as_bytes());
     }
 }
 

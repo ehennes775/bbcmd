@@ -16,7 +16,7 @@ pub struct Page
 {
     pub items : Vec<Box<dyn Item>>,
 
-    path : PathBuf,
+    pub path : PathBuf,
 
     version : ItemParams
 }
@@ -88,13 +88,11 @@ impl Page
 
     pub fn write_to(&self, writer: &mut Box<dyn Write>)
     {
+        self.version.write_to(writer);
+
         for item in &self.items
         {
             item.write_to(writer);
-
-            if let Some(attributes) = item.attributes()
-            {
-            }
         }
     }
 }

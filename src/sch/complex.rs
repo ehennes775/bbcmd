@@ -44,6 +44,7 @@ impl Item for Complex
 
 
     fn into_complex(&self) -> Option<&Self> { Some(self) }
+    fn into_complex_mut(&mut self) -> Option<&mut Self> { Some(self) }
 
 
     fn write_to(&self, writer: &mut Box<dyn Write>)
