@@ -6,17 +6,32 @@ use crate::sch::item::Item;
 use std::str::FromStr;
 use crate::sch::reader::Reader;
 use crate::sch::version;
+use std::fmt::{Formatter, Debug, Error};
+
+
+pub const NAME: &str = "Page";
 
 
 pub struct Page
 {
     pub items : Vec<Box<dyn Item>>,
 
-
     path : PathBuf,
 
-
     version : ItemParams
+}
+
+
+impl Debug for Page
+{
+    fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error>
+    {
+        match self.items.len()
+        {
+            1usize => write!(f, "{} {{ {:?} }}", NAME, &self.items[0]),
+            count => write!(f, "{} {{ items={} }}", NAME, count)
+        }
+    }
 }
 
 

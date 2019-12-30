@@ -2,6 +2,8 @@ use crate::sch::item_attributes::ItemAttributes;
 use crate::sch::item_params::ItemParams;
 use std::io::Write;
 use std::fmt::Debug;
+use crate::sch::text::Text;
+use crate::sch::complex::Complex;
 
 
 pub trait Item : Debug
@@ -11,6 +13,11 @@ pub trait Item : Debug
 
 
     fn params(&self) -> &ItemParams;
+
+
+    fn into_complex(&self) -> Option<&Complex> { None }
+
+    fn into_text(&self) -> Option<&Text> { None }
 
 
     fn write_to(&self, writer: &mut Box<dyn Write>);

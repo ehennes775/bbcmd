@@ -12,7 +12,7 @@ pub const NAME: &str = "Complex";
 
 pub struct Complex
 {
-    attributes : ItemAttributes,
+    pub attributes : ItemAttributes,
 
     params : ItemParams
 }
@@ -20,7 +20,8 @@ pub struct Complex
 
 enum ParamIndex
 {
-    CODE = 0
+    CODE = 0,
+    NAME = 6
 }
 
 
@@ -28,11 +29,7 @@ impl Debug for Complex
 {
     fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error>
     {
-        match self.attributes.items.len()
-        {
-            1usize => write!(f, "{} {{ {:?} }}", NAME, self.attributes.items[0]),
-            c => write!(f, "{} {{ attributes={} }}", NAME, c)
-        }
+        write!(f, "{} {{ name=\"{}\" }}", NAME, &self.params[ParamIndex::NAME as usize])
     }
 }
 
@@ -44,6 +41,9 @@ impl Item for Complex
 
 
     fn params(&self) -> &ItemParams { &self.params }
+
+
+    fn into_complex(&self) -> Option<&Self> { Some(self) }
 
 
     fn write_to(&self, writer: &mut Box<dyn Write>)
@@ -58,6 +58,8 @@ impl Complex
 {
     pub fn create<T: ItemReader>(params: ItemParams, reader : &mut T) -> Complex
     {
+        assert_eq!(&params[ParamIndex::CODE as usize], CODE);
+
         Complex
         {
             attributes: ItemAttributes::read_from(reader).unwrap(),

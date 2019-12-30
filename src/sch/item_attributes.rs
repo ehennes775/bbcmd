@@ -60,6 +60,8 @@ impl ItemAttributes
             {
                 let params = ItemParams::from_str(&lookahead).unwrap();
 
+                reader.x9();
+
                 if params.code() == text::CODE
                 {
                     let attribute = Text::create(params, reader).unwrap();
@@ -68,7 +70,7 @@ impl ItemAttributes
                 }
                 else { /* todo: error */ }
 
-                lookahead = reader.x9();
+                lookahead = reader.lookahead();
             }
 
             ending_line = lookahead;

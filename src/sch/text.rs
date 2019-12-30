@@ -1,6 +1,7 @@
 use crate::sch::item_params::ItemParams;
 use crate::sch::item::Item;
 use crate::sch::reader::ItemReader;
+use regex::Regex;
 use std::io::Write;
 use std::fmt::{Debug, Formatter, Error};
 
@@ -42,6 +43,9 @@ impl Item for Text
     fn params(&self) -> &ItemParams { &self.params }
 
 
+    fn into_text(&self) -> Option<&Text> { Some(self) }
+
+
     fn write_to(&self, writer: &mut Box<dyn Write>)
     {
         self.params.write_to(writer);
@@ -56,6 +60,20 @@ impl Item for Text
 
 impl Text
 {
+    pub fn attribute_name(&self) -> Option<String>
+    {
+        parse(&self.lines[0]).0.and_then(|n| Some(String::from(n)))
+    }
+
+
+    pub fn attribute_value(&self) -> Option<String>
+    {
+        let input = &self.lines.join("\n");
+
+        parse(input).1.and_then(|v| Some(String::from(v.trim_end())))
+    }
+
+
     pub fn create(params: ItemParams, reader: &mut impl ItemReader) -> Result<Text,i32>
     {
         assert_eq!(&params[ParamIndex::CODE as usize], CODE);
@@ -75,5 +93,49 @@ impl Text
         };
 
         Ok(Text { lines, params })
+    }
+}
+
+
+fn parse(input: &str) -> (Option<&str>, Option<&str>)
+{
+    lazy_static!
+    {
+            static ref REGEX: Regex = Regex::new(r"^(.+?)=(?s)(.*)").unwrap();
+    }
+
+    match REGEX.captures(input)
+    {
+        None => (None, None),
+        Some(c) =>
+            (
+                c.get(1).and_then(|n| Some(n.as_str())),
+                c.get(2).and_then(|v| Some(v.as_str()))
+            )
+    }
+}
+
+
+#[cfg(test)]
+mod test
+{
+    use crate::sch::text::parse;
+
+    #[test]
+    fn test_parse()
+    {
+        let cases = vec!
+        [
+            ( "name=value",           (Some("name"), Some("value")) ),
+            ( "name=value1\nvalue2",  (Some("name"), Some("value1\nvalue2")) ),
+            ( "hello world",          (None, None) )
+        ];
+
+        for case in cases
+        {
+            let output = parse(case.0);
+
+            assert_eq!(output, case.1);
+        }
     }
 }
