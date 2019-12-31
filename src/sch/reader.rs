@@ -53,12 +53,12 @@ impl<T: Read> ItemReader for Reader<T>
     {
         let mut lines = vec![];
 
-        for count in 0..count
+        for _count in 0..count
         {
             lines.push(self.buffer.to_string());
 
             self.buffer.clear();
-            let count2 = self.reader.read_line(&mut self.buffer).unwrap();
+            let _count2 = self.reader.read_line(&mut self.buffer).unwrap();
         }
 
         Ok(lines)

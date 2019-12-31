@@ -87,32 +87,34 @@ impl ItemAttributes
     }
 
 
-    pub fn new() -> ItemAttributes
-    {
-        ItemAttributes
-        {
-            ending_line: String::from("}"),
-            items: vec![],
-            starting_line: String::from("{")
-        }
-    }
+    //pub fn new() -> ItemAttributes
+    //{
+    //    ItemAttributes
+    //    {
+    //        ending_line: String::from("}"),
+    //        items: vec![],
+    //        starting_line: String::from("{")
+    //    }
+    //}
 
 
-    pub fn write_to(&self, writer: &mut Box<dyn Write>)
+    pub fn write_to(&self, writer: &mut Box<dyn Write>) -> std::io::Result<()>
     {
         if !self.items.is_empty()
         {
-            writer.write("{".as_bytes());
-            writer.write("\n".as_bytes());
+            writer.write(self.starting_line.as_bytes())?;
+            writer.write("\n".as_bytes())?;
 
             for item in &self.items
             {
-                item.write_to(writer);
+                item.write_to(writer)?;
             }
 
-            writer.write("}".as_bytes());
-            writer.write("\n".as_bytes());
+            writer.write(self.ending_line.as_bytes())?;
+            writer.write("\n".as_bytes())?;
         }
+
+        Ok(())
     }
 }
 

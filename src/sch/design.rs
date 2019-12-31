@@ -1,11 +1,8 @@
 use std::path::PathBuf;
 use crate::sch::page::Page;
 use std::fmt::{Debug, Formatter, Error};
-use crate::sch::item::Item;
-use crate::sch;
-use std::convert::{TryInto, TryFrom};
-use crate::sch::text::Text;
-use crate::sch::complex::Complex;
+use std::fs::File;
+use std::io::Write;
 
 
 pub const NAME: &str = "Design";
@@ -28,21 +25,27 @@ impl Debug for Design
 
 impl Design
 {
-    pub fn attributes(&self)
+    pub fn dump(&self)
     {
-//        let x = self.pages
-//            .iter()
-//            .map(|p| p.items.iter())
-//            .flatten()
-//            .map(|i| i.into_text())
-//            .flat_map(|x| x)
-//            .filter(|x| x.attribute_name().is_some())
-//            .map(|x| x.attribute_value());
-//
-//        for y in x
-//        {
-//            println!("{:?}", y);
-//        }
+        println!("{:?}", self);
+
+        for page in &self.pages
+        {
+            println!("    {:?}", page);
+
+            for item in &page.items
+            {
+                println!("        {:?}", item);
+
+                if let Some(complex) = item.into_complex()
+                {
+                    for attribute in &complex.attributes.items
+                    {
+                        println!("            {:?}", attribute);
+                    }
+                }
+            }
+        }
     }
 
 
@@ -58,5 +61,24 @@ impl Design
             Err(t) => Err(t),
             Ok(pages) => Ok(Design { pages })
         }
+    }
+
+    // TODO temporarily writes to a file prefixed with out_ for development
+    pub fn write(&self) -> std::io::Result<()>
+    {
+        for page in &self.pages
+        {
+            let output_filename = format!("out_{}", page.path.file_name().unwrap().to_str().unwrap());
+
+            let file = File::create(&output_filename).unwrap();
+
+            println!("Writing {:?}", output_filename);
+
+            let mut output: Box<dyn Write> = Box::new(file);
+
+            page.write_to(&mut output)?;
+        }
+
+        Ok(())
     }
 }

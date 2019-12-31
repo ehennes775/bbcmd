@@ -1,12 +1,9 @@
-use std::path::PathBuf;
-use structopt::StructOpt;
 use crate::sch::design::Design;
 use crate::sch::complex::Complex;
 use crate::sch::text::Text;
 use regex::Regex;
-use std::io::{stdout, Write};
-use std::ffi::OsString;
-use std::fs::File;
+use std::path::PathBuf;
+use structopt::StructOpt;
 
 
 #[derive(Debug, StructOpt)]
@@ -30,19 +27,15 @@ pub struct RefdesSubcommand
 
 impl RefdesSubcommand
 {
-    pub fn execute(&self) -> Result<(),(&str)>
+    pub fn execute(&self) -> Result<(),&str>
     {
-        let mut schematics = match Design::create(&self.files)
-        {
-            Err(e) => return Err(e),
-            Ok(t) => t
-        };
+        let mut schematics = Design::create(&self.files)?;
 
-        println!();
-        println!("{}", "Components");
-
+        if self.reset
         {
-            let mut components: Vec<&mut Complex> = schematics.pages
+            println!("{}", "Resetting REFDES...");
+
+            let components: Vec<&mut Complex> = schematics.pages
             .iter_mut()
             .map(|p| p.items.iter_mut())
             .flatten()
@@ -52,9 +45,7 @@ impl RefdesSubcommand
 
             for component in components
             {
-                //println!("{:?}", component);
-
-                let mut attributes: Vec<&mut Text> = component.attributes.items
+                let attributes: Vec<&mut Text> = component.attributes.items
                 .iter_mut()
                 .filter(|t| t.attribute_name().is_some())
                 .filter(|t| t.attribute_name().unwrap().eq(&String::from(r"refdes")))
@@ -74,8 +65,6 @@ impl RefdesSubcommand
                             }
                         Some(t) =>
                             {
-                                println!("valid before={:?} after={:?}", input, t);
-
                                 attribute.set_attribute_value(t);
                             }
                     }
@@ -83,47 +72,13 @@ impl RefdesSubcommand
             }
         }
 
-        // TODO: move into a debug/dump function
+        schematics.dump();
 
-        println!("{:?}", schematics);
-
-        for schematic in &schematics.pages
+        match schematics.write()
         {
-            println!("    {:?}", schematic);
-
-            for item in &schematic.items
-            {
-                println!("        {:?}", item);
-
-                if let Some(c) = item.into_complex()
-                {
-                    for attribute in &c.attributes.items
-                    {
-                        println!("            {:?}", attribute);
-                    }
-                }
-            }
+            Err(_e) => Err("Error writing files"),
+            Ok(_t) => Ok(())
         }
-
-
-        {
-            for page in schematics.pages
-            {
-                let output_filename = format!("out_{}", page.path.file_name().unwrap().to_str().unwrap());
-
-                let x2 = OsString::from(&output_filename);
-
-                let file = File::create(&output_filename).unwrap();
-
-                println!("Writing {:?}", output_filename);
-
-                let mut output: Box<dyn Write> = Box::new(file);
-
-                page.write_to(&mut output);
-            }
-        }
-
-        Ok(())
     }
 }
 

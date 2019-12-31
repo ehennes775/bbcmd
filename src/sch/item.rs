@@ -21,5 +21,5 @@ pub trait Item : Debug
     fn into_text(&self) -> Option<&Text> { None }
 
 
-    fn write_to(&self, writer: &mut Box<dyn Write>);
+    fn write_to(&self, writer: &mut Box<dyn Write>) -> std::io::Result<()>;
 }

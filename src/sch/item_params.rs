@@ -49,12 +49,14 @@ impl ItemParams
     }
 
 
-    pub fn write_to(&self, writer: &mut Box<dyn Write>)
+    pub fn write_to(&self, writer: &mut Box<dyn Write>) -> std::io::Result<()>
     {
         let output = &self.params.join(" ");
 
-        writer.write(output.as_bytes());
-        writer.write("\n".as_bytes());
+        writer.write(output.as_bytes())?;
+        writer.write("\n".as_bytes())?;
+
+        Ok(())
     }
 }
 
@@ -115,7 +117,7 @@ mod test
             let mut writer: Box<dyn Write> = Box::new(buffer);
 
             let params = line.parse::<ItemParams>().unwrap();
-            params.write_to(&mut writer);
+            params.write_to(&mut writer).unwrap();
 
             // TODO:figure out ownership here
 

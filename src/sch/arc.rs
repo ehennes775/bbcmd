@@ -31,9 +31,11 @@ impl Item for Arc
     fn params(&self) -> &ItemParams { &self.params }
 
 
-    fn write_to(&self, writer: &mut Box<dyn Write>)
+    fn write_to(&self, writer: &mut Box<dyn Write>) -> std::io::Result<()>
     {
-        self.params.write_to(writer);
+        self.params.write_to(writer)?;
+
+        Ok(())
     }
 }
 

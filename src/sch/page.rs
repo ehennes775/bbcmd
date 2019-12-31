@@ -86,13 +86,15 @@ impl Page
     }
 
 
-    pub fn write_to(&self, writer: &mut Box<dyn Write>)
+    pub fn write_to(&self, writer: &mut Box<dyn Write>) -> std::io::Result<()>
     {
-        self.version.write_to(writer);
+        self.version.write_to(writer)?;
 
         for item in &self.items
         {
-            item.write_to(writer);
+            item.write_to(writer)?;
         }
+
+        Ok(())
     }
 }
