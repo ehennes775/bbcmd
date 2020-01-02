@@ -1,6 +1,6 @@
 # Reference Designators
 
-1. __Initially, reset all reference designators.__ When initial designs are cut and paste from other designs, the reference designators may need to be reset. Optionally, reset the reference designaors applicable the the other projects with the following command.
+1. __Initially, reset all reference designators.__ When initial designs are cut and paste from other designs, the reference designators may need to be reset. Optionally, reset the reference designators, applicable to these other projects, with the following command.
 
     ```
     bbcmd refdes -r design-1.sch design-2.sch design-3.sch
