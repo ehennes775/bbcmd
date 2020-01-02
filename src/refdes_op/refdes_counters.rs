@@ -3,6 +3,9 @@ use std::collections::HashMap;
 use std::io::{Error, Write, Read, BufRead, BufReader};
 use crate::refdes_op::refdes::Refdes;
 use std::cmp::max;
+use crate::output::{println_result, print_file_op};
+use std::fs::File;
+use std::path::PathBuf;
 
 
 pub struct RefdesCounters
@@ -13,6 +16,18 @@ pub struct RefdesCounters
 
 impl RefdesCounters
 {
+    pub fn assign_number(&mut self, refdes: &mut Refdes)
+    {
+        let prefix = &refdes.prefix;
+
+        let number = self.counters.get(prefix).unwrap_or(&0) + 1;
+
+        refdes.assign(number);
+
+        self.push(refdes);
+    }
+
+
     pub fn new() -> RefdesCounters
     {
         RefdesCounters { counters: HashMap::new() }
@@ -55,6 +70,19 @@ impl RefdesCounters
     }
 
 
+    pub fn read_from_file(&mut self, path: &PathBuf) -> Result<(),Error>
+    {
+        print_file_op("Reading REFDES counter file", &path);
+
+        let file = File::open(&path).unwrap();
+        let result = self.read_from(file);
+
+        println_result(&result);
+
+        result
+    }
+
+
     pub fn write_to<T: Write>(&self, mut writer: T) -> Result<(),Error>
     {
         for line in &BOILERPLATE
@@ -74,6 +102,19 @@ impl RefdesCounters
         }
 
         Ok(())
+    }
+
+
+    pub fn write_to_file(&self, path: &PathBuf) -> Result<(),Error>
+    {
+        print_file_op("Writing REFDES counter file", &path);
+
+        let file = File::create(&path).unwrap();
+        let result = self.write_to(file);
+
+        println_result(&result);
+
+        result
     }
 }
 

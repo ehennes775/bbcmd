@@ -12,7 +12,7 @@ pub fn print_file_op(op: &str, path: &PathBuf)
 }
 
 
-pub fn println_result(result: std::io::Result<()>)
+pub fn println_result(result: &std::io::Result<()>)
 {
     match result
     {

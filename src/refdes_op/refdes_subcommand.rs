@@ -4,7 +4,6 @@ use crate::sch::text::Text;
 use regex::Regex;
 use std::path::PathBuf;
 use structopt::StructOpt;
-use crate::refdes_op::assigner::Assigner;
 use crate::refdes_op::refdes::Refdes;
 use crate::refdes_op::refdes_counters::RefdesCounters;
 use std::io::stdout;
@@ -96,27 +95,27 @@ impl RefdesSubcommand
         {
             if let Some(t) = &self.counts
             {
-                print_file_op("Reading REFDES counter file", t);
-
-                let file = File::open(t).unwrap();
-                let result = counters.read_from(file);
-
-                println_result(result);
+                counters.read_from_file(t);
             }
 
             println!("{}", "Renumbering REFDES...");
 
-            let assigner = Assigner::create(&mut schematics);
+            for attribute in refdes_attributes
+            {
+                let mut refdes = attribute.attribute_value().unwrap().parse::<Refdes>().unwrap();
+
+                if refdes.number.is_none()
+                {
+                    counters.assign_number(&mut refdes);
+
+                    attribute.set_attribute_value(refdes.to_string());
+                }
+            }
         }
 
         if let Some(t) = &self.counts
         {
-            print_file_op("Writing REFDES counter file", t);
-
-            let file = File::create(t).unwrap();
-            let result = counters.write_to(file);
-
-            println_result(result);
+            counters.write_to_file(t);
         }
 
         //schematics.dump();

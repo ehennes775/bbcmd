@@ -79,7 +79,7 @@ impl Design
             .iter()
             .inspect(|p| print_file_op("Reading", p))
             .map(|f| Page::create(f))
-            .inspect(|_r| println_result(Ok(())))
+            .inspect(|_r| println_result(&Ok(())))
             .collect();
 
         match result
@@ -105,7 +105,7 @@ impl Design
 
             let status = page.write_to(&mut output);
 
-            println_result(status);
+            println_result(&status);
         }
     }
 }
