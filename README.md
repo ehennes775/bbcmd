@@ -1,8 +1,7 @@
 # bbcmd
 Command line utility for Lepton-EDA
 
-- Assign reference designators
-- Reset reference designators
+- [Assign reference designators](./doc/refdes.md)
 
 ## Installation
 1. __Install Git.__ This step can be skipped with Git already installed. Use the following command to install or update Git:
