@@ -14,9 +14,9 @@ Command line utility for Lepton-EDA
 
     a. __Install Rust using APT.__
 
-        ```
-        sudo apt install cargo libstd-rust-1.37 rustc
-        ```
+    ```
+    sudo apt install cargo libstd-rust-1.37 rustc
+    ```
 
     b. __Install Rust using [rustup.rs](https://www.rust-lang.org/tools/install).__
 
