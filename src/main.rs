@@ -1,10 +1,10 @@
 #[macro_use] extern crate lazy_static;
 
 mod arguments;
-mod check;
-mod refdes;
+mod check_op;
+mod refdes_op;
 mod sch;
-
+mod output;
 use std::process;
 use structopt::StructOpt;
 

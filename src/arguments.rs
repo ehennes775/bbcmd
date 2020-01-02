@@ -1,6 +1,6 @@
 use structopt::StructOpt;
-use crate::check::check_subcommand::CheckSubcommand;
-use crate::refdes::refdes_subcommand::RefdesSubcommand;
+use crate::check_op::check_subcommand::CheckSubcommand;
+use crate::refdes_op::refdes_subcommand::RefdesSubcommand;
 
 
 #[derive(Debug, StructOpt)]

@@ -3,6 +3,9 @@ use crate::sch::page::Page;
 use std::fmt::{Debug, Formatter, Error};
 use std::fs::File;
 use std::io::Write;
+use crate::sch::complex::Complex;
+use crate::sch::item::Item;
+use crate::output::{println_result, print_file_op};
 
 
 pub const NAME: &str = "Design";
@@ -25,6 +28,7 @@ impl Debug for Design
 
 impl Design
 {
+    #[allow(dead_code)]
     pub fn dump(&self)
     {
         println!("{:?}", self);
@@ -49,11 +53,33 @@ impl Design
     }
 
 
+    pub fn components(&self) -> Vec<&Complex>
+    {
+        self.pages.iter()
+            .flat_map(|page| page.items.iter())
+            .map(|item| item.into_complex())
+            .flat_map(|o| o)
+            .collect()
+    }
+
+
+    pub fn components_mut(&mut self) -> Vec<&mut Complex>
+    {
+        self.pages.iter_mut()
+            .flat_map(|page| page.items.iter_mut())
+            .map(|item| item.into_complex_mut())
+            .flat_map(|o| o)
+            .collect()
+    }
+
+
     pub fn create(files : &[PathBuf]) -> Result<Design,&str>
     {
         let result : Result<Vec<Page>,_> = files
             .iter()
+            .inspect(|p| print_file_op("Reading", p))
             .map(|f| Page::create(f))
+            .inspect(|_r| println_result(Ok(())))
             .collect();
 
         match result
@@ -63,8 +89,9 @@ impl Design
         }
     }
 
+
     // TODO temporarily writes to a file prefixed with out_ for development
-    pub fn write(&self) -> std::io::Result<()>
+    pub fn write(&self)
     {
         for page in &self.pages
         {
@@ -72,13 +99,13 @@ impl Design
 
             let file = File::create(&output_filename).unwrap();
 
-            println!("Writing {:?}", output_filename);
+            print!("Writing {}... ", output_filename);
 
             let mut output: Box<dyn Write> = Box::new(file);
 
-            page.write_to(&mut output)?;
-        }
+            let status = page.write_to(&mut output);
 
-        Ok(())
+            println_result(status);
+        }
     }
 }
