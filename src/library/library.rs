@@ -53,7 +53,7 @@ impl<T: Loadable> Library<T>
             }
         }
 
-        panic!(); //Ok(item.unwrap());
+        panic!()
     }
 }
 
@@ -70,6 +70,6 @@ mod test
     {
         let mut library = Library::<Page>::new().unwrap();
 
-        let symbol = library.load_item("ech-capacitor-non-1.sym").unwrap();
+        //let symbol = library.load_item("ech-capacitor-non-1.sym").unwrap();
     }
 }
