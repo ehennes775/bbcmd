@@ -1,4 +1,4 @@
-use crate::scd::group::Series;
+use crate::scd::group::Group;
 use crate::scd::part::Part;
 use serde_derive::Deserialize;
 use std::fmt::Debug;
@@ -18,7 +18,7 @@ pub struct Drawing
 
 
     #[serde(rename="groups")]
-    pub groups: Vec<Series>
+    pub groups: Vec<Group>
 }
 
 

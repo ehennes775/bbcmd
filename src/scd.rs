@@ -1,4 +1,3 @@
-pub(crate) mod drawing;
-pub(crate) mod library;
-pub(crate) mod part;
+pub mod drawing;
 mod group;
+pub mod part;

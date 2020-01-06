@@ -35,6 +35,12 @@ impl<'a> Debug for Entry<'a>
 impl<'a> Entry<'a>
 {
     /// Creates a new engineering bill of material line item
+    ///
+    /// # Arguments
+    ///
+    /// * `key` -
+    /// * `drawing` -
+    /// * `c` -
     pub fn new(key: &'a Key, drawing: &'a Drawing, c: Vec<&'a Complex>) -> Entry<'a>
     {
         Entry { key, drawing, components: c }
@@ -60,7 +66,7 @@ impl<'a> Entry<'a>
     /// Reference designators for all components on this line item
     pub fn refdes(&self) -> std::vec::IntoIter<Refdes>
     {
-        let refdes_attributes = self.components.iter()
+        let mut refdes_attributes = self.components.iter()
             .flat_map(|complex| complex.attributes.items.iter())
             .filter(|text| text.attribute_name().is_some())
             .filter(|text| text.attribute_name().unwrap().eq(&String::from(r"refdes")))
@@ -69,6 +75,8 @@ impl<'a> Entry<'a>
             .map(|r| r.parse::<Refdes>())
             .flat_map(|x| x)
             .collect::<Vec<_>>();
+
+        refdes_attributes.sort();
 
         refdes_attributes.into_iter()
     }
@@ -89,7 +97,7 @@ impl<'a> Entry<'a>
     /// Returns the filename of the specification control drawing (SCD)
     pub fn scd(&self) -> &str
     {
-        &self.key.scd
+        &self.key.scd()
     }
 
 

@@ -4,6 +4,7 @@ use serde::export::Formatter;
 use serde::export::fmt::Error;
 
 
+/// Contains manufacturer name and part number for a purchased part
 #[derive(Deserialize)]
 pub struct Part
 {
@@ -27,6 +28,10 @@ impl Debug for Part
 
 impl Part
 {
+    /// The name of the manufacturer
     pub fn manufacturer(&self) -> &String { &self.manufacturer }
+
+
+    /// The manufacturer part number
     pub fn part_number(&self) -> &String { &self.part_number }
 }
