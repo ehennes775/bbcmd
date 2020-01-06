@@ -13,7 +13,7 @@ mod pin;
 mod path;
 pub(crate) mod text;
 
-mod page;
+pub mod page;
 mod reader;
 pub(crate) mod design;
 mod version;

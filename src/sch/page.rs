@@ -7,6 +7,7 @@ use std::str::FromStr;
 use crate::sch::reader::Reader;
 use crate::sch::version;
 use std::fmt::{Formatter, Debug, Error};
+use crate::library::loadable::Loadable;
 
 
 pub const NAME: &str = "Page";
@@ -37,13 +38,9 @@ impl Debug for Page
 
 impl Page
 {
-    pub fn create(path : &PathBuf) -> Result<Page,&str>
+    pub fn create(path : &PathBuf) -> Result<Page,Box<dyn std::error::Error>>
     {
-        let file = match File::open(path)
-        {
-            Err(_e) => return Err("nope"),
-            Ok(t) => t
-        };
+        let file =  File::open(path)?;
 
         let mut reader = Reader::new(file);
         let mut params = reader.x2().unwrap();
@@ -96,5 +93,16 @@ impl Page
         }
 
         Ok(())
+    }
+}
+
+
+impl Loadable for Page
+{
+    fn load(path: &PathBuf) -> Result<Box<Self>, Box<dyn std::error::Error>>
+    {
+        let page = Page::create(path)?;
+
+        Ok(Box::new(page))
     }
 }

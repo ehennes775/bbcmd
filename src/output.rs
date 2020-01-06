@@ -17,6 +17,12 @@ pub fn println_result(result: &std::io::Result<()>)
     match result
     {
         Err(e) => println!("{}Error:{} {}", SGR_RED, SGR_RESET, e),
-        Ok(_) => println!("{}Ok{}", SGR_GREEN, SGR_RESET)
+        Ok(_) => println_success("Ok")
     }
+}
+
+
+pub fn println_success(message: &str)
+{
+    println!("{}{}{}", SGR_GREEN, message, SGR_RESET)
 }

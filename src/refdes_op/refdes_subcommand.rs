@@ -37,7 +37,7 @@ pub struct RefdesSubcommand
 
 impl RefdesSubcommand
 {
-    pub fn execute(&self) -> Result<(),&str>
+    pub fn execute(&self) -> Result<(),Box<dyn std::error::Error>>
     {
         let mut schematics = Design::create(&self.files)?;
 

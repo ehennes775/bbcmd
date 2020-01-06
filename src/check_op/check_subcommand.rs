@@ -1,5 +1,6 @@
 use std::path::PathBuf;
 use structopt::StructOpt;
+use std::convert::TryFrom;
 
 
 #[derive(Debug, StructOpt)]
@@ -13,8 +14,8 @@ pub struct CheckSubcommand
 
 impl CheckSubcommand
 {
-    pub fn execute(&self) -> Result<(),(&str)>
+    pub fn execute(&self) -> Result<(),Box<dyn std::error::Error>>
     {
-        Err("Check subcommand not implemented")
+        Err(Box::try_from("Check subcommand not implemented").unwrap())
     }
 }

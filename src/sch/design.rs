@@ -73,20 +73,15 @@ impl Design
     }
 
 
-    pub fn create(files : &[PathBuf]) -> Result<Design,&str>
+    pub fn create(files : &[PathBuf]) -> Result<Design,Box::<dyn std::error::Error>>
     {
-        let result : Result<Vec<Page>,_> = files
-            .iter()
+        let pages = files.into_iter()
             .inspect(|p| print_file_op("Reading", p))
             .map(|f| Page::create(f))
             .inspect(|_r| println_result(&Ok(())))
-            .collect();
+            .collect::<Result<Vec<_>,_>>()?;
 
-        match result
-        {
-            Err(t) => Err(t),
-            Ok(pages) => Ok(Design { pages })
-        }
+        Ok(Design { pages })
     }
 
 
