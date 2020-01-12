@@ -8,6 +8,7 @@ use crate::sch::reader::Reader;
 use crate::sch::version;
 use std::fmt::{Formatter, Debug, Error};
 use crate::library::loadable::Loadable;
+use crate::sch::complex::Complex;
 
 
 pub const NAME: &str = "Page";
@@ -38,6 +39,15 @@ impl Debug for Page
 
 impl Page
 {
+    pub fn components(&self) -> Vec<&Complex>
+    {
+        self.items.iter()
+            .map(|item| item.into_complex())
+            .flat_map(|o| o)
+            .collect()
+    }
+
+
     pub fn create(path : &PathBuf) -> Result<Page,Box<dyn std::error::Error>>
     {
         let file =  File::open(path)?;
@@ -80,6 +90,12 @@ impl Page
             path : path.clone(),
             version
         })
+    }
+
+
+    pub fn id(&self) -> String
+    {
+        String::from(self.path.file_name().unwrap().to_str().unwrap())
     }
 
 

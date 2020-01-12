@@ -1,0 +1,12 @@
+; gafrc for a self contained repo of a geda project.
+; All symbols should be embedded in the schematic, or local to this folder.
+(reset-component-library)
+;(reset-source-library)
+
+; Allow to source symbols from the current working directory
+(define current-working-directory (getenv "PWD"))
+(component-library (build-path current-working-directory "sym") "Local Symbols")
+(component-library (build-path current-working-directory ".." "sym") "Project Symbols")
+(component-library (build-path "/home" "ehennes" "Projects" "edalib" "symbols") "Symbol Cache")
+;(source-library  current-working-directory)
+

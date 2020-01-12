@@ -1,0 +1,59 @@
+{
+    "description": "Diode, TVS, Unidirectional, $(value), SMA",
+    "footprints": [
+        "ech-diode-sma.fp"
+    ],
+    "groups": [
+        {
+            "value": "5 V",
+            "parts": [
+                {
+                    "m": "Bourns Inc",
+                    "p": "SMAJ5.0A"
+                },
+                {
+                    "m": "Diodes Incorporated",
+                    "p": "SMAJ5.0A-13-F"
+                },
+                {
+                    "m": "Littelfuse Inc",
+                    "p": "SMAJ5.0A"
+                }
+            ]
+        },
+        {
+            "value": "12 V",
+            "parts": [
+                {
+                    "m": "Bourns Inc",
+                    "p": "SMAJ12A"
+                },
+                {
+                    "m": "Diodes Incorporated",
+                    "p": "SMAJ12A-13-F"
+                },
+                {
+                    "m": "Littelfuse Inc",
+                    "p": "SMAJ12A"
+                }
+            ]
+        },
+        {
+            "value": "24 V",
+            "parts": [
+                {
+                    "m": "Bourns Inc",
+                    "p": "SMAJ24A"
+                },
+                {
+                    "m": "Diodes Incorporated",
+                    "p": "SMAJ24A-13-F"
+                },
+                {
+                    "m": "Littelfuse Inc",
+                    "p": "SMAJ24A"
+                }
+            ]
+        }
+    ]
+}

@@ -9,6 +9,7 @@ use crate::refdes_op::refdes_counters::RefdesCounters;
 use std::io::stdout;
 use std::fs::File;
 use crate::output::{println_result, print_file_op};
+use crate::cfg::config::Config;
 
 
 #[derive(Debug, StructOpt)]
@@ -37,7 +38,7 @@ pub struct RefdesSubcommand
 
 impl RefdesSubcommand
 {
-    pub fn execute(&self) -> Result<(),Box<dyn std::error::Error>>
+    pub fn execute(&self, config: Box<Config>) -> Result<(),Box<dyn std::error::Error>>
     {
         let mut schematics = Design::create(&self.files)?;
 

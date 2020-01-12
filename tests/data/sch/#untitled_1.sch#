@@ -1,0 +1,31 @@
+v 20191003 2
+C -30600 77000 1 0 0 ech-resistor-1.sym
+{
+T -30300 77700 5 10 1 1 0 1 1
+refdes=R1
+T -30300 77500 5 10 1 1 0 1 1
+value=$(Resistance)
+T -30300 77300 5 10 1 1 0 1 1
+package=$(Package)
+T -30805 78200 5 10 0 0 0 7 1
+device=RESISTOR
+T -30805 77800 5 10 0 0 0 7 1
+footprint=$(Footprint)
+T -30208 76792 5 10 1 1 0 0 1
+scd=100000.json
+}
+C -28100 77000 1 0 0 ech-resistor-1.sym
+{
+T -27800 77700 5 10 1 1 0 1 1
+refdes=R2
+T -27800 77500 5 10 1 1 0 1 1
+value=$(Resistance)
+T -27800 77300 5 10 1 1 0 1 1
+package=$(Package)
+T -28305 78200 5 10 0 0 0 7 1
+device=RESISTOR
+T -28305 77800 5 10 0 0 0 7 1
+footprint=$(Footprint)
+T -28100 77000 5 10 1 0 0 0 1
+scd=100000.json
+}

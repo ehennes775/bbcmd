@@ -1,0 +1,44 @@
+{
+    "description": "Diode, TVS, Unidirectional, $(value), SOD-123FL",
+    "footprints": [
+        "ech-diode-sod-123fl.fp"
+    ],
+    "groups": [
+        {
+            "value": "3.3 V",
+            "parts": [
+                {
+                    "m": "Littelfuse Inc",
+                    "p": "SMF3.3"
+                }
+            ]
+        },
+        {
+            "value": "5 V",
+            "parts": [
+                {
+                    "m": "Littelfuse Inc",
+                    "p": "SMF5.0A"
+                }
+            ]
+        },
+        {
+            "value": "12 V",
+            "parts": [
+                {
+                    "m": "Littelfuse Inc",
+                    "p": "SMF12A"
+                }
+            ]
+        },
+        {
+            "value": "24 V",
+            "parts": [
+                {
+                    "m": "Littelfuse Inc",
+                    "p": "SMF24A"
+                }
+            ]
+        }
+    ]
+}

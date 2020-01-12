@@ -12,6 +12,7 @@ use crate::scd::drawing::Drawing;
 use crate::scdbom_op::key::Key;
 use crate::scdbom_op::entry::Entry;
 use std::collections::{HashSet, HashMap};
+use crate::cfg::config::Config;
 
 
 #[derive(Debug, StructOpt)]
@@ -25,11 +26,8 @@ pub struct ScdBomSubcommand
 
 impl ScdBomSubcommand
 {
-    pub fn execute(&self) -> Result<(),Box<dyn std::error::Error>>
+    pub fn execute(&self, config: Box<Config>) -> Result<(),Box<dyn std::error::Error>>
     {
-        let mut symbol_library = crate::library::library::Library::<Page>::new()?;
-        let mut scd_library = crate::library::library::Library::<Drawing>::new()?;
-
         let schematics = Design::create(&self.files)?;
 
         let components = schematics.components();
@@ -47,7 +45,7 @@ impl ScdBomSubcommand
             .collect::<HashSet<_>>();
 
         let drawings = numbers.into_iter()
-            .map(|s| (s, scd_library.load_item(s).unwrap()))
+            .map(|s| (s, config.load_drawing(s).unwrap()))
             .collect::<HashMap<_,_>>();
 
 

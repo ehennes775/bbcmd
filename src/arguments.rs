@@ -2,6 +2,7 @@ use structopt::StructOpt;
 use crate::check_op::check_subcommand::CheckSubcommand;
 use crate::refdes_op::refdes_subcommand::RefdesSubcommand;
 use crate::scdbom_op::scdbom_subcommand::ScdBomSubcommand;
+use crate::cfg::config::Config;
 
 
 #[derive(Debug, StructOpt)]
@@ -38,13 +39,13 @@ pub enum Arguments
 
 impl Arguments
 {
-    pub fn execute(&self) -> Result<(),Box<dyn std::error::Error>>
+    pub fn execute(&self, config: Box<Config>) -> Result<(),Box<dyn std::error::Error>>
     {
         match self
         {
-            Arguments::Check { subcommand }  => subcommand.execute(),
-            Arguments::Refdes { subcommand }  => subcommand.execute(),
-            Arguments::ScdBom { subcommand }  => subcommand.execute()
+            Arguments::Check { subcommand }  => subcommand.execute(config),
+            Arguments::Refdes { subcommand }  => subcommand.execute(config),
+            Arguments::ScdBom { subcommand }  => subcommand.execute(config)
         }
     }
 }

@@ -6,23 +6,23 @@ use std::path::PathBuf;
 use std::error::Error;
 use crate::library::loadable::Loadable;
 use crate::output::{print_file_op, println_result, println_success};
+use serde_derive::Deserialize;
 
 
-pub struct Library<T>
+
+#[derive(Deserialize)]
+pub struct Library
 {
-    cache: HashMap<String, T>,
-
     paths: Vec<PathBuf>
 }
 
 
-impl<T: Loadable> Library<T>
+impl Library
 {
-    pub fn new() -> Result<Library<T>,Box<dyn std::error::Error>>
+    pub fn new() -> Result<Library,Box<dyn std::error::Error>>
     {
         Ok(Library
         {
-            cache: HashMap::new(),
             paths: vec![PathBuf::from("/home/ehennes/Projects/edalib/scd/scd")]
         })
     }
@@ -34,7 +34,7 @@ impl<T: Loadable> Library<T>
     ///
     /// * `name` - The filename of the item including extension
     ///
-    pub fn load_item(&mut self, name: &str) -> Result<T,Box<dyn Error>>
+    pub fn load_item<T: Loadable>(&self, name: &str) -> Result<T,Box<dyn Error>>
     {
         print_file_op("Reading", &PathBuf::from(name));
 
@@ -68,7 +68,7 @@ mod test
     #[test]
     fn test_load()
     {
-        let mut library = Library::<Page>::new().unwrap();
+        let mut library = Library::new().unwrap();
 
         //let symbol = library.load_item("ech-capacitor-non-1.sym").unwrap();
     }

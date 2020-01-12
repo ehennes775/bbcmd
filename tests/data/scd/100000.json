@@ -1,0 +1,67 @@
+{
+    "description": "Resistor, Thick film, $(value), 1%, 0.1W, 0603",
+    "footprints"  : [
+        "ech-resistor-0603.fp"
+    ],
+    "groups": [
+        {
+            "value": "100 Ω",
+            "parts": [
+                {
+                    "m": "Bourns Inc",
+                    "p": "CR0603-FX-1000ELF"
+                }
+            ]
+        },
+        {
+            "value": "232 Ω",
+            "parts": [
+            ]
+        },
+        {
+            "value": "332 kΩ",
+            "parts": [
+                {
+                    "m": "Bourns Inc",
+                    "p": "CR0603-FX-3320ELF"
+                }
+            ]
+        },
+        {
+            "value": "2.00 kΩ",
+            "parts": [
+                {
+                    "m": "Bourns Inc",
+                    "p": "CR0603-FX-2001ELF"
+                }
+            ]
+        },
+        {
+            "value": "4.75 kΩ",
+            "parts": [
+                {
+                    "m": "Bourns Inc",
+                    "p": "CR0603-FX-4751ELF"
+                }
+            ]
+        },
+        {
+            "value": "10.0 kΩ",
+            "parts": [
+                {
+                    "m": "Bourns Inc",
+                    "p": "CR0603-FX-1002ELF"
+                }
+            ]
+        },
+        {
+            "value": "47.5 kΩ",
+            "parts": [
+                {
+                    "m": "Bourns Inc",
+                    "p": "CR0603-FX-4752ELF"
+                }
+            ]
+        }
+    ]
+}

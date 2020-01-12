@@ -7,6 +7,7 @@ mod scdbom_op;
 mod sch;
 mod library;
 mod output;
+mod cfg;
 
 mod scd;
 
@@ -14,13 +15,15 @@ use std::process;
 use structopt::StructOpt;
 
 use crate::arguments::Arguments;
+use crate::cfg::config::Config;
 
 
 fn main()
 {
     let arguments = Arguments::from_args();
+    let config = Config::load().unwrap();
 
-    let result = arguments.execute();
+    let result = arguments.execute(Box::new(config));
 
     let status = match result
     {

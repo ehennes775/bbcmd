@@ -50,7 +50,7 @@ impl Drawing
 
 impl Loadable for Drawing
 {
-    fn load(path: &PathBuf) -> Result<Box<Self>, Box<std::error::Error>>
+    fn load(path: &PathBuf) -> Result<Box<Self>, Box<dyn std::error::Error>>
     {
         let file = File::open(path).unwrap();
 
