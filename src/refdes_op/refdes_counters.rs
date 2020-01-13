@@ -48,7 +48,7 @@ impl RefdesCounters
     }
 
 
-    pub fn read_from<T: Read>(&mut self, mut reader: T) -> Result<(),Error>
+    pub fn read_from<T: Read>(&mut self, reader: T) -> Result<(),Error>
     {
         let buffered = BufReader::new(reader);
 
@@ -176,7 +176,6 @@ fn parse_line(line: &str) -> ParseEvent
 #[cfg(test)]
 mod test
 {
-    use crate::refdes_op::refdes::Refdes;
     use crate::refdes_op::refdes_counters::{parse_line, ParseEvent};
 
 
@@ -254,7 +253,7 @@ mod test
                     {
                         panic!("Failing test case = `{}`", case)
                     },
-                ParseEvent::Err(e) => {}
+                ParseEvent::Err(_) => {}
             }
         }
     }

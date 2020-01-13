@@ -1,6 +1,5 @@
 use std::fmt::{Debug, Error, Formatter};
 use crate::sch::complex::Complex;
-use std::hash::{Hash, Hasher};
 
 
 #[derive(Eq, Hash, PartialEq)]

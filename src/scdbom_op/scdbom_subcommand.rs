@@ -1,14 +1,6 @@
 use crate::sch::design::Design;
-use crate::sch::complex::Complex;
-use crate::sch::text::Text;
-use regex::Regex;
 use std::path::PathBuf;
 use structopt::StructOpt;
-use std::io::stdout;
-use std::fs::File;
-use crate::output::{println_result, print_file_op};
-use crate::sch::page::Page;
-use crate::scd::drawing::Drawing;
 use crate::scdbom_op::key::Key;
 use crate::scdbom_op::entry::Entry;
 use std::collections::{HashSet, HashMap};

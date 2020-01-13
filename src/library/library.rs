@@ -1,11 +1,7 @@
-use crate::sch::page::Page;
-use std::collections::HashMap;
-use std::fs::File;
-use std::io::BufReader;
 use std::path::PathBuf;
 use std::error::Error;
 use crate::library::loadable::Loadable;
-use crate::output::{print_file_op, println_result, println_success};
+use crate::output::{print_file_op, println_success};
 use serde_derive::Deserialize;
 
 
@@ -19,15 +15,6 @@ pub struct Library
 
 impl Library
 {
-    pub fn new() -> Result<Library,Box<dyn std::error::Error>>
-    {
-        Ok(Library
-        {
-            paths: vec![PathBuf::from("/home/ehennes/Projects/edalib/scd/scd")]
-        })
-    }
-
-
     /// Obtain a item from the library
     ///
     /// # Arguments
@@ -61,14 +48,13 @@ impl Library
 #[cfg(test)]
 mod test
 {
-    use crate::library::library::Library;
-    use crate::sch::page::Page;
+    // use super::*;
 
 
     #[test]
     fn test_load()
     {
-        let mut library = Library::new().unwrap();
+        // let mut library = Library::new().unwrap();
 
         //let symbol = library.load_item("ech-capacitor-non-1.sym").unwrap();
     }

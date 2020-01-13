@@ -1,14 +1,8 @@
 use crate::sch::design::Design;
-use crate::sch::complex::Complex;
-use crate::sch::text::Text;
-use regex::Regex;
 use std::path::PathBuf;
 use structopt::StructOpt;
 use crate::refdes_op::refdes::Refdes;
 use crate::refdes_op::refdes_counters::RefdesCounters;
-use std::io::stdout;
-use std::fs::File;
-use crate::output::{println_result, print_file_op};
 use crate::cfg::config::Config;
 
 
@@ -38,7 +32,7 @@ pub struct RefdesSubcommand
 
 impl RefdesSubcommand
 {
-    pub fn execute(&self, config: Box<Config>) -> Result<(),Box<dyn std::error::Error>>
+    pub fn execute(&self, _config: Box<Config>) -> Result<(),Box<dyn std::error::Error>>
     {
         let mut schematics = Design::create(&self.files)?;
 
@@ -96,7 +90,7 @@ impl RefdesSubcommand
         {
             if let Some(t) = &self.counts
             {
-                counters.read_from_file(t);
+                counters.read_from_file(t).unwrap();
             }
 
             println!("{}", "Renumbering REFDES...");
@@ -116,7 +110,7 @@ impl RefdesSubcommand
 
         if let Some(t) = &self.counts
         {
-            counters.write_to_file(t);
+            counters.write_to_file(t).unwrap();
         }
 
         //schematics.dump();
@@ -128,75 +122,7 @@ impl RefdesSubcommand
 }
 
 
-fn assign_refdes<T: ToString>(input: &str, value: T) -> Option<String>
-{
-    lazy_static!
-    {
-        static ref REGEX: Regex = Regex::new(r"^(\D+)(\d+|\?)(.*)").unwrap();
-    }
-
-    let capture = REGEX.captures(input)?;
-
-    let prefix = capture.get(1).unwrap().as_str();
-    let suffix = capture.get(3).unwrap().as_str();
-
-    Some(format!("{}{}{}", prefix, value.to_string(), suffix))
-}
-
-
-fn reset_refdes(input: &str) -> Option<String>
-{
-    assign_refdes(input, "?")
-}
-
-
 #[cfg(test)]
 mod test
 {
-    use crate::refdes_op::refdes_subcommand::assign_refdes;
-    use crate::refdes_op::refdes_subcommand::reset_refdes;
-
-
-    #[test]
-    fn test_assign_refdes()
-    {
-        let cases = vec!
-        [
-            ("C1",  10, Some("C10")),
-            ("D1A", 15, Some("D15A")),
-            ("L?",  20, Some("L20")),
-            ("R?A", 25, Some("R25A")),
-            ("NOT",  0, None),
-            ("123",  0, None)
-        ];
-
-        for case in cases
-        {
-            let output = assign_refdes(case.0, case.1);
-
-            assert_eq!(output, case.2.and_then(|s| Some(s.to_string())));
-        }
-    }
-
-
-    #[test]
-    fn test_reset_refdes()
-    {
-        let cases = vec!
-        [
-            ("C1",  Some("C?")),
-            ("D1A", Some("D?A")),
-            ("L?",  Some("L?")),
-            ("R?A", Some("R?A")),
-            ("NOT", None),
-            ("123", None)
-        ];
-
-        for case in cases
-        {
-            let output = reset_refdes(case.0);
-
-            assert_eq!(output, case.1.and_then(|s| Some(s.to_string())));
-        }
-    }
 }

@@ -22,10 +22,10 @@ impl Debug for Group
 
 impl Group
 {
-    /// The parts within the group
-    pub fn parts(&self) -> std::vec::IntoIter<&Part> { self.parts().into_iter() }
+    // The parts within the group
+    // pub fn parts(&self) -> std::vec::IntoIter<&Part> { self.parts().into_iter() }
 
 
     /// The value shared by all parts within this group
-    pub fn value(&self) -> &str { &self.value }
+    pub fn _value(&self) -> &str { &self.value }
 }

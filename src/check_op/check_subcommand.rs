@@ -1,6 +1,5 @@
 use std::path::PathBuf;
 use structopt::StructOpt;
-use std::convert::TryFrom;
 use crate::cfg::config::Config;
 use crate::sch::design::Design;
 use crate::check_op::checks::unassigned_refdes::UnassignedRefdes;
@@ -20,7 +19,7 @@ pub struct CheckSubcommand
 
 impl CheckSubcommand
 {
-    pub fn execute(&self, config: Box<Config>) -> Result<(),Box<dyn std::error::Error>>
+    pub fn execute(&self, _config: Box<Config>) -> Result<(),Box<dyn std::error::Error>>
     {
         let checks: Vec<fn(&Design)->Vec<Box<dyn Error>>> = vec!
         [
