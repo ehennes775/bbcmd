@@ -1,6 +1,6 @@
 use std::fs::File;
 use std::io::{Write};
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use crate::sch::item_params::ItemParams;
 use crate::sch::item::Item;
 use std::str::FromStr;
@@ -48,9 +48,9 @@ impl Page
     }
 
 
-    pub fn create(path : &PathBuf) -> Result<Page,Box<dyn std::error::Error>>
+    pub fn create<T: AsRef<Path>>(path: T) -> Result<Page,Box<dyn std::error::Error>>
     {
-        let file =  File::open(path)?;
+        let file =  File::open(&path)?;
 
         let mut reader = Reader::new(file);
         let mut params = reader.x2().unwrap();
@@ -87,7 +87,7 @@ impl Page
         Ok(Page
         {
             items,
-            path : path.clone(),
+            path : PathBuf::from(path.as_ref()),
             version
         })
     }
@@ -115,7 +115,7 @@ impl Page
 
 impl Loadable for Page
 {
-    fn load(path: &PathBuf) -> Result<Box<Self>, Box<dyn std::error::Error>>
+    fn load<T: AsRef<Path>>(path: T) -> Result<Box<Self>, Box<dyn std::error::Error>>
     {
         let page = Page::create(path)?;
 

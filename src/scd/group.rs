@@ -6,8 +6,8 @@ use std::fmt::{Debug, Formatter, Error};
 #[derive(Deserialize)]
 pub struct Group
 {
-    pub parts: Vec<Part>,
-    pub value: String
+    parts: Vec<Part>,
+    value: String
 }
 
 
@@ -22,10 +22,13 @@ impl Debug for Group
 
 impl Group
 {
-    // The parts within the group
-    // pub fn parts(&self) -> std::vec::IntoIter<&Part> { self.parts().into_iter() }
+    /// The parts within this group
+    pub fn parts(&self) -> std::vec::IntoIter<&Part>
+    {
+        self.parts.iter().collect::<Vec<_>>().into_iter()
+    }
 
 
     /// The value shared by all parts within this group
-    pub fn _value(&self) -> &str { &self.value }
+    pub fn value(&self) -> &str { &self.value }
 }

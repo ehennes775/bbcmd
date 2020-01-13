@@ -5,7 +5,7 @@ use std::fmt::Debug;
 use serde::export::Formatter;
 use serde::export::fmt::Error;
 use crate::library::loadable::Loadable;
-use std::path::PathBuf;
+use std::path::Path;
 use std::io::BufReader;
 use std::fs::File;
 
@@ -33,24 +33,25 @@ impl Debug for Drawing
 
 impl Drawing
 {
+    /// A description of this drawing without macro expansion
     pub fn description(&self) -> &String { &self.description }
 
 
+    /// Find all parts with a specific value
     pub fn find_parts(&self, value: &str) -> std::vec::IntoIter<&Part>
     {
-        let parts = self.groups.iter()
-            .filter(|s| s.value.eq(value))
-            .flat_map(|s| s.parts.iter())
-            .collect::<Vec<_>>();
-
-        parts.into_iter()
+        self.groups.iter()
+            .filter(|s| s.value().eq(value))
+            .flat_map(|s| s.parts())
+            .collect::<Vec<_>>()
+            .into_iter()
     }
 }
 
 
 impl Loadable for Drawing
 {
-    fn load(path: &PathBuf) -> Result<Box<Self>, Box<dyn std::error::Error>>
+    fn load<T: AsRef<Path>>(path: T) -> Result<Box<Self>, Box<dyn std::error::Error>>
     {
         let file = File::open(path).unwrap();
 
