@@ -78,21 +78,23 @@ impl ScdBomSubcommand
     {
         print_file_op("Writing", &self.output);
 
-        let func = || -> std::io::Result<()>
-        {
-            let file = File::create(&self.output)?;
-            let mut writer = BufWriter::new(file);
-
-            for (index, entry) in entries.iter().enumerate()
-            {
-                entry.write(&mut writer, index + 1)?;
-            }
-
-            Ok(())
-        };
-
-        let result = func();
+        let result = write_bom_inner();
 
         println_result(&result);
+    }
+
+
+    /// Write EBOM to the output file "try block"
+    fn write_bom_inner(&self, entries: &[Entry]) -> std::io::Result<()>
+    {
+        let file = File::create(&self.output)?;
+        let mut writer = BufWriter::new(file);
+
+        for (index, entry) in entries.iter().enumerate()
+        {
+            entry.write(&mut writer, index + 1)?;
+        }
+
+        Ok(())
     }
 }
