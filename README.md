@@ -2,6 +2,7 @@
 Command line utility for Lepton-EDA
 
 - [Assign reference designators](./doc/refdes.md)
+- [Create an Engineering Bill of Materials (EBOM)](./doc/ebom.md)
 
 ## Installation
 1. __Install Git.__ This step can be skipped with Git already installed. Use the following command to install or update Git:
