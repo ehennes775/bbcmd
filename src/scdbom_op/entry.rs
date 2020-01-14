@@ -110,4 +110,36 @@ impl<'a> Entry<'a>
             Some(t) => t.as_str()
         }
     }
+
+
+    /// Write this entry as single line item to the writer
+    pub(crate) fn write<T: std::io::Write>(&self, writer: &mut T, number: usize) -> std::io::Result<()>
+    {
+        writeln!(
+            writer,
+            "{:4}|{:16}|{:16}|{}",
+            number,
+            self.scd(),
+            self.value(),
+            self.description()
+        )?;
+
+        let mut refdes_list = self.refdes().collect::<Vec<_>>();
+
+        refdes_list.sort();
+
+        let refdes_string = refdes_list.iter()
+            .map(|r| r.to_string())
+            .collect::<Vec<_>>()
+            .join(",");
+
+        writeln!(writer, "        {}", &refdes_string)?;
+
+        for part in self.parts()
+        {
+            writeln!(writer, "        {:20}|{}", part.manufacturer(), part.part_number())?;
+        }
+
+        Ok(())
+    }
 }

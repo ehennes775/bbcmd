@@ -85,7 +85,7 @@ impl ScdBomSubcommand
 
             for (index, entry) in entries.iter().enumerate()
             {
-                Self::write_entry(&mut writer, index + 1, entry)?;
+                entry.write(&mut writer, index + 1)?;
             }
 
             Ok(())
@@ -94,34 +94,5 @@ impl ScdBomSubcommand
         let result = func();
 
         println_result(&result);
-    }
-
-
-    /// Write a single line item to the output file
-    fn write_entry<T: std::io::Write>(writer: &mut T, number: usize, entry: &Entry) -> std::io::Result<()>
-    {
-        write!(writer, "{:4}|", number)?;
-        write!(writer, "{:16}|", entry.scd())?;
-        write!(writer, "{:16}|", entry.value())?;
-        write!(writer, "{}", entry.description())?;
-        writeln!(writer)?;
-
-        let mut z = entry.refdes().collect::<Vec<_>>();
-
-        z.sort();
-
-        let y = z.iter()
-            .map(|r| r.to_string())
-            .collect::<Vec<_>>()
-            .join(",");
-
-        writeln!(writer, "        {}", &y)?;
-
-        for part in entry.parts()
-        {
-            writeln!(writer, "        {:20}|{}", part.manufacturer(), part.part_number())?;
-        }
-
-        Ok(())
     }
 }
