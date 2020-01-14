@@ -5,6 +5,9 @@ use crate::scdbom_op::key::Key;
 use crate::scdbom_op::entry::Entry;
 use std::collections::{HashSet, HashMap};
 use crate::cfg::config::Config;
+use std::fs::File;
+use std::io::{BufWriter};
+use crate::output::{print_file_op, println_result};
 
 
 #[derive(Debug, StructOpt)]
@@ -12,7 +15,17 @@ pub struct ScdBomSubcommand
 {
     #[structopt(parse(from_os_str), required=true)]
     /// Schematic input files
-    files : Vec<PathBuf>
+    files: Vec<PathBuf>,
+
+
+    #[structopt(long="output", short="o", required=true)]
+    /// EBOM output file
+    output: PathBuf,
+
+
+    #[structopt(long="project", short="p")]
+    /// An optional project file
+    project: Option<PathBuf>
 }
 
 
@@ -52,32 +65,61 @@ impl ScdBomSubcommand
                     let drawing = &drawings[key.scd()];
                     Entry::new(&key, drawing, c)
                 })
-            ; //.collect::<Vec<_>>();
+            .collect::<Vec<_>>();
+
+        self.write_bom(&entries);
+
+        Ok(())
+    }
 
 
-        for (index, entry) in entries.enumerate()
+    /// Write EBOM to the output file
+    fn write_bom(&self, entries: &[Entry])
+    {
+        print_file_op("Writing", &self.output);
+
+        let func = || -> std::io::Result<()>
         {
-            print!("{:4}|", index);
-            print!("{:16}|", entry.scd());
-            print!("{:16}|", entry.value());
-            print!("{}", entry.description());
-            println!();
+            let file = File::create(&self.output)?;
+            let mut writer = BufWriter::new(file);
 
-            let mut z = entry.refdes().collect::<Vec<_>>();
-
-            z.sort();
-
-            let y = z.iter()
-                .map(|r| r.to_string())
-                .collect::<Vec<_>>()
-                .join(",");
-
-            println!("        {}", &y);
-
-            for part in entry.parts()
+            for (index, entry) in entries.iter().enumerate()
             {
-                println!("        {:20}|{}", part.manufacturer(), part.part_number());
+                Self::write_entry(&mut writer, index + 1, entry)?;
             }
+
+            Ok(())
+        };
+
+        let result = func();
+
+        println_result(&result);
+    }
+
+
+    /// Write a single line item to the output file
+    fn write_entry<T: std::io::Write>(writer: &mut T, number: usize, entry: &Entry) -> std::io::Result<()>
+    {
+        write!(writer, "{:4}|", number)?;
+        write!(writer, "{:16}|", entry.scd())?;
+        write!(writer, "{:16}|", entry.value())?;
+        write!(writer, "{}", entry.description())?;
+        writeln!(writer)?;
+
+        let mut z = entry.refdes().collect::<Vec<_>>();
+
+        z.sort();
+
+        let y = z.iter()
+            .map(|r| r.to_string())
+            .collect::<Vec<_>>()
+            .join(",");
+
+        writeln!(writer, "        {}", &y)?;
+
+        for part in entry.parts()
+        {
+            writeln!(writer, "        {:20}|{}", part.manufacturer(), part.part_number())?;
         }
 
         Ok(())
