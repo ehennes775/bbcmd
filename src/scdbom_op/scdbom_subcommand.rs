@@ -78,7 +78,7 @@ impl ScdBomSubcommand
     {
         print_file_op("Writing", &self.output);
 
-        let result = write_bom_inner();
+        let result = self.write_bom_inner(entries);
 
         println_result(&result);
     }
