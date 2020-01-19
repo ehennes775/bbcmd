@@ -14,7 +14,7 @@ use crate::prj::project::Project;
 #[derive(Debug, StructOpt)]
 pub struct EbomSubcommand
 {
-    #[structopt(parse(from_os_str), required=true)]
+    #[structopt(parse(from_os_str))]
     /// Schematic input files
     files: Vec<PathBuf>,
 
