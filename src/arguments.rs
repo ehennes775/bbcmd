@@ -18,21 +18,21 @@ pub enum Arguments
     },
 
 
+    #[structopt(name="ebom")]
+    /// Provides engineering bill of material (EBOM) processing functionality
+    Ebom
+    {
+        #[structopt(flatten)]
+        subcommand: EbomSubcommand
+    },
+
+
     #[structopt(name="refdes")]
     /// Provides REFDES processing functionality
     Refdes
     {
         #[structopt(flatten)]
         subcommand: RefdesSubcommand
-    },
-
-
-    #[structopt(name="scdbom")]
-    /// Provides REFDES processing functionality
-    ScdBom
-    {
-        #[structopt(flatten)]
-        subcommand: EbomSubcommand
     }
 }
 
@@ -45,7 +45,7 @@ impl Arguments
         {
             Arguments::Check { subcommand }  => subcommand.execute(config),
             Arguments::Refdes { subcommand }  => subcommand.execute(config),
-            Arguments::ScdBom { subcommand }  => subcommand.execute(config)
+            Arguments::Ebom { subcommand }  => subcommand.execute(config)
         }
     }
 }
