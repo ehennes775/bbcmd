@@ -67,20 +67,22 @@ impl ScdBomSubcommand
                 })
             .collect::<Vec<_>>();
 
-        self.write_bom(&entries);
+        self.write_bom(&entries)?;
 
         Ok(())
     }
 
 
     /// Write EBOM to the output file
-    fn write_bom(&self, entries: &[Entry])
+    fn write_bom(&self, entries: &[Entry]) -> std::io::Result<()>
     {
         print_file_op("Writing", &self.output);
 
         let result = self.write_bom_inner(entries);
 
         println_result(&result);
+
+        result
     }
 
 
