@@ -1,8 +1,8 @@
 use crate::sch::design::Design;
 use std::path::PathBuf;
 use structopt::StructOpt;
-use crate::scdbom_op::key::Key;
-use crate::scdbom_op::entry::Entry;
+use crate::ebom_op::key::Key;
+use crate::ebom_op::entry::Entry;
 use std::collections::{HashSet, HashMap};
 use crate::cfg::config::Config;
 use std::fs::File;
@@ -11,7 +11,7 @@ use crate::output::{print_file_op, println_result};
 
 
 #[derive(Debug, StructOpt)]
-pub struct ScdBomSubcommand
+pub struct EbomSubcommand
 {
     #[structopt(parse(from_os_str), required=true)]
     /// Schematic input files
@@ -29,7 +29,7 @@ pub struct ScdBomSubcommand
 }
 
 
-impl ScdBomSubcommand
+impl EbomSubcommand
 {
     pub fn execute(&self, config: Box<Config>) -> Result<(),Box<dyn std::error::Error>>
     {
@@ -41,7 +41,7 @@ impl ScdBomSubcommand
             .flat_map(|c| Key::create(c).and_then(|k| Some((k, c))))
             .collect::<Vec<_>>();
 
-        let keys = pairs.iter()
+        let unique_refdes = pairs.iter()
             .map(|p| &p.0)
             .collect::<HashSet<_>>();
 
@@ -54,7 +54,7 @@ impl ScdBomSubcommand
             .collect::<HashMap<_,_>>();
 
 
-        let entries = keys.iter()
+        let entries = unique_refdes.iter()
             .map(|key|
                 {
                     let c = pairs.iter()

@@ -1,4 +1,4 @@
-use crate::scdbom_op::key::Key;
+use crate::ebom_op::key::Key;
 use crate::sch::complex::Complex;
 use crate::refdes_op::refdes::Refdes;
 use crate::scd::part::Part;

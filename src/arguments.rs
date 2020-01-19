@@ -1,7 +1,7 @@
 use structopt::StructOpt;
 use crate::check_op::check_subcommand::CheckSubcommand;
 use crate::refdes_op::refdes_subcommand::RefdesSubcommand;
-use crate::scdbom_op::scdbom_subcommand::ScdBomSubcommand;
+use crate::ebom_op::ebom_subcommand::EbomSubcommand;
 use crate::cfg::config::Config;
 
 
@@ -32,7 +32,7 @@ pub enum Arguments
     ScdBom
     {
         #[structopt(flatten)]
-        subcommand: ScdBomSubcommand
+        subcommand: EbomSubcommand
     }
 }
 

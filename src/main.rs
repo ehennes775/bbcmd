@@ -3,7 +3,7 @@
 mod arguments;
 mod check_op;
 mod refdes_op;
-mod scdbom_op;
+mod ebom_op;
 mod sch;
 mod library;
 mod output;
