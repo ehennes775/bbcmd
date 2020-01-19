@@ -8,6 +8,7 @@ mod sch;
 mod library;
 mod output;
 mod cfg;
+mod prj;
 
 mod scd;
 

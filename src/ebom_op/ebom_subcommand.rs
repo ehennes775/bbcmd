@@ -8,6 +8,7 @@ use crate::cfg::config::Config;
 use std::fs::File;
 use std::io::{BufWriter};
 use crate::output::{print_file_op, println_result};
+use crate::prj::project::Project;
 
 
 #[derive(Debug, StructOpt)]
@@ -33,7 +34,13 @@ impl EbomSubcommand
 {
     pub fn execute(&self, config: Box<Config>) -> Result<(),Box<dyn std::error::Error>>
     {
-        let schematics = Design::create(&self.files)?;
+        let project = Project::load(self.project.as_ref())?;
+
+        let mut files: Vec<PathBuf> = Vec::new();
+        files.extend(project.schematics());
+        files.extend_from_slice(&self.files);
+
+        let schematics = Design::create(&files)?;
 
         let components = schematics.components();
 
