@@ -18,7 +18,7 @@ pub struct RefdesSubcommand
     config_args: ConfigArgs,
 
 
-    #[structopt(long="counts", short="c")]
+    #[structopt(long="counts", short="n")]
     /// Reference designator counts input/output file
     counts : Option<PathBuf>,
 
