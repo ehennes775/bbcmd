@@ -9,11 +9,16 @@ use std::fs::File;
 use std::io::{BufWriter};
 use crate::output::{print_file_op, println_result};
 use crate::prj::project::Project;
+use crate::cfg::config_args::ConfigArgs;
 
 
 #[derive(Debug, StructOpt)]
 pub struct EbomSubcommand
 {
+    #[structopt(flatten)]
+    config: ConfigArgs,
+
+
     #[structopt(parse(from_os_str))]
     /// Schematic input files
     files: Vec<PathBuf>,
