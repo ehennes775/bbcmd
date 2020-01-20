@@ -11,6 +11,8 @@ pub struct Config
 }
 
 
+const DEFAULT_FILENAME: &str = "bbcmd.conf";
+
 impl Config
 {
     pub fn load() -> Result<Config,Box<dyn std::error::Error>>
@@ -41,31 +43,19 @@ impl Config
 
 pub fn project_config_path() -> Result<PathBuf,Box<dyn std::error::Error>>
 {
-    match env::var("PWD")
-    {
-        Err(e) => Err(Box::new(e)),
-        Ok(current) =>
-            {
-                let parts = vec![current.as_str(), "bbcmd.conf"];
-                let path = parts.iter().collect::<PathBuf>();
-                Ok(path)
-            }
-    }
+    let current = env::var("PWD")?;
+    let parts = vec![current.as_str(), DEFAULT_FILENAME];
+    let path = parts.iter().collect::<PathBuf>();
+    Ok(path)
 }
 
 
 pub fn _user_config_path() -> Result<PathBuf,Box<dyn std::error::Error>>
 {
-    match env::var("HOME")
-    {
-        Err(e) => Err(Box::new(e)),
-        Ok(home) =>
-        {
-            let parts = vec![home.as_str(), ".bbcmd", "bbcmd.conf"];
-            let path = parts.iter().collect::<PathBuf>();
-            Ok(path)
-        }
-    }
+    let home = env::var("HOME")?;
+    let parts = vec![home.as_str(), ".bbcmd", DEFAULT_FILENAME];
+    let path = parts.iter().collect::<PathBuf>();
+    Ok(path)
 }
 
 
@@ -85,7 +75,7 @@ mod test
             env::var("CARGO_MANIFEST_DIR").unwrap().as_str(),
             "tests",
             "data",
-            "bbcmd.conf"
+            DEFAULT_FILENAME
         ].iter().collect::<PathBuf>();
 
         let _config = Config::load_with_path(&path);
