@@ -4,7 +4,6 @@ use structopt::StructOpt;
 use crate::ebom_op::key::Key;
 use crate::ebom_op::entry::Entry;
 use std::collections::{HashSet, HashMap};
-use crate::cfg::config::Config;
 use std::fs::File;
 use std::io::{BufWriter};
 use crate::output::{print_file_op, println_result};
@@ -16,7 +15,7 @@ use crate::cfg::config_args::ConfigArgs;
 pub struct EbomSubcommand
 {
     #[structopt(flatten)]
-    config: ConfigArgs,
+    config_args: ConfigArgs,
 
 
     #[structopt(parse(from_os_str))]
@@ -37,8 +36,9 @@ pub struct EbomSubcommand
 
 impl EbomSubcommand
 {
-    pub fn execute(&self, config: Box<Config>) -> Result<(),Box<dyn std::error::Error>>
+    pub fn execute(&self,) -> Result<(),Box<dyn std::error::Error>>
     {
+        let config = self.config_args.load_config()?;
         let project = Project::load(self.project.as_ref())?;
 
         let mut files: Vec<PathBuf> = Vec::new();

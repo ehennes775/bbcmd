@@ -16,15 +16,13 @@ use std::process;
 use structopt::StructOpt;
 
 use crate::arguments::Arguments;
-use crate::cfg::config::Config;
 
 
 fn main()
 {
     let arguments = Arguments::from_args();
-    let config = Config::load().unwrap();
 
-    let result = arguments.execute(Box::new(config));
+    let result = arguments.execute();
 
     let status = match result
     {

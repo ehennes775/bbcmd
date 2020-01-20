@@ -3,7 +3,7 @@ use std::path::PathBuf;
 use structopt::StructOpt;
 use crate::refdes_op::refdes::Refdes;
 use crate::refdes_op::refdes_counters::RefdesCounters;
-use crate::cfg::config::Config;
+use crate::cfg::config_args::ConfigArgs;
 
 
 #[derive(Debug, StructOpt)]
@@ -12,6 +12,10 @@ pub struct RefdesSubcommand
     #[structopt(long="assign", short="a")]
     /// Assign reference designators
     assign: bool,
+
+
+    #[structopt(flatten)]
+    config_args: ConfigArgs,
 
 
     #[structopt(long="counts", short="c")]
@@ -32,8 +36,9 @@ pub struct RefdesSubcommand
 
 impl RefdesSubcommand
 {
-    pub fn execute(&self, _config: Box<Config>) -> Result<(),Box<dyn std::error::Error>>
+    pub fn execute(&self) -> Result<(),Box<dyn std::error::Error>>
     {
+        let _config = self.config_args.load_config()?;
         let mut schematics = Design::create(&self.files)?;
 
         let mut components = schematics.components_mut();

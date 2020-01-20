@@ -1,7 +1,6 @@
-use crate::scd::drawing::Drawing;
-use std::path::{Path, PathBuf};
-use std::env;
 use crate::cfg::project::Project;
+use crate::scd::drawing::Drawing;
+use std::path::Path;
 
 
 pub struct Config
@@ -11,17 +10,11 @@ pub struct Config
 }
 
 
-const DEFAULT_FILENAME: &str = "bbcmd.conf";
+pub const DEFAULT_FILENAME: &str = "bbcmd.conf";
 
 impl Config
 {
-    pub fn load() -> Result<Config,Box<dyn std::error::Error>>
-    {
-        Self::load_with_path(project_config_path()?)
-    }
-
-
-    pub fn load_with_path<T: AsRef<Path>>(path: T) -> Result<Config,Box<dyn std::error::Error>>
+    pub fn load<T: AsRef<Path>>(path: T) -> Result<Config,Box<dyn std::error::Error>>
     {
         let project = Project::load(path);
 
@@ -38,24 +31,6 @@ impl Config
     {
         self.project.as_ref().unwrap().load_drawing(name)
     }
-}
-
-
-pub fn project_config_path() -> Result<PathBuf,Box<dyn std::error::Error>>
-{
-    let current = env::var("PWD")?;
-    let parts = vec![current.as_str(), DEFAULT_FILENAME];
-    let path = parts.iter().collect::<PathBuf>();
-    Ok(path)
-}
-
-
-pub fn _user_config_path() -> Result<PathBuf,Box<dyn std::error::Error>>
-{
-    let home = env::var("HOME")?;
-    let parts = vec![home.as_str(), ".bbcmd", DEFAULT_FILENAME];
-    let path = parts.iter().collect::<PathBuf>();
-    Ok(path)
 }
 
 
@@ -78,6 +53,6 @@ mod test
             DEFAULT_FILENAME
         ].iter().collect::<PathBuf>();
 
-        let _config = Config::load_with_path(&path);
+        let _config = Config::load(&path);
     }
 }
