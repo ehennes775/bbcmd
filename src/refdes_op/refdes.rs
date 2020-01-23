@@ -83,7 +83,9 @@ impl Ord for Refdes
 {
     fn cmp(&self, other: &Self) -> Ordering
     {
-        self.partial_cmp(other).unwrap()
+        (&self.prefix, self.number, &self.suffix).cmp(
+            &(&other.prefix, other.number, &other.suffix)
+            )
     }
 }
 
@@ -92,10 +94,7 @@ impl PartialOrd for Refdes
 {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering>
     {
-        self.prefix.partial_cmp(&other.prefix)
-            .or(self.number.partial_cmp(&other.number))
-            .or(self.suffix.partial_cmp(&other.suffix))
-            .or(Some(Ordering::Equal))
+        Some(self.cmp(other))
     }
 }
 
@@ -171,6 +170,42 @@ mod test
 
             assert_eq!(case.1, refdes.to_string())
         }
+    }
+
+
+    #[test]
+    fn test_eq()
+    {
+        let r1 = "R1".parse::<Refdes>();
+        let r2 = "R1".parse::<Refdes>();
+
+        assert_eq!(r1, r2);
+    }
+
+
+    #[test]
+    fn test_ne_relational()
+    {
+        let c1 = "C1".parse::<Refdes>();
+        let r1 = "R1".parse::<Refdes>();
+
+        assert_ne!(c1, r1);
+        assert!(c1 < r1);
+        assert!(r1 > c1);
+
+        let l1 = "L1".parse::<Refdes>();
+        let l2 = "L2".parse::<Refdes>();
+
+        assert_ne!(l1, l2);
+        assert!(l1 < l2);
+        assert!(l2 > l1);
+
+        let d1a = "D1A".parse::<Refdes>();
+        let d1b = "D1B".parse::<Refdes>();
+
+        assert_ne!(d1a, d1b);
+        assert!(d1a < d1b);
+        assert!(d1b > d1a);
     }
 
 
