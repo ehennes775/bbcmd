@@ -206,6 +206,13 @@ mod test
         assert_ne!(d1a, d1b);
         assert!(d1a < d1b);
         assert!(d1b > d1a);
+
+        let qu = "Q?".parse::<Refdes>();
+        let q1 = "Q1".parse::<Refdes>();
+
+        assert_ne!(qu, q1);
+        assert!(qu < q1);
+        assert!(q1 > qu);
     }
 
 
