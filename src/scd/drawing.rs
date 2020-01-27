@@ -22,6 +22,9 @@ pub struct Drawing
 }
 
 
+const VALUE_ATTRIBUTE_NAME: &str = "value";
+
+
 impl Debug for Drawing
 {
     fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error>
@@ -45,6 +48,18 @@ impl Drawing
             .flat_map(|s| s.parts())
             .collect::<Vec<_>>()
             .into_iter()
+    }
+
+
+    #[allow(dead_code)]
+    /// The name of the value attribute, or none if not used
+    pub fn value_name(&self) -> Option<&str>
+    {
+        match self.groups.iter().any(|g| g.value().ne(""))
+        {
+            false => None,
+            true => Some(VALUE_ATTRIBUTE_NAME)
+        }
     }
 }
 

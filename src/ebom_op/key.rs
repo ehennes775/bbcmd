@@ -56,11 +56,11 @@ impl Key
             .first()
             .and_then(|x| x.attribute_value())?;
 
-        let value= attributes.iter()
-        .filter(|a| a.attribute_name().unwrap().eq("value"))
-        .take(1)
-        .collect::<Vec<_>>()
-        .first().and_then(|x| x.attribute_value());
+        let value = attributes.iter()
+            .filter(|a| a.attribute_name().unwrap().eq("value"))
+            .take(1)
+            .collect::<Vec<_>>()
+            .first().and_then(|x| x.attribute_value());
 
         Some ( Key { scd, value } )
     }
